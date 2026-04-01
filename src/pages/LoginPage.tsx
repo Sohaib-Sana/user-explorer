@@ -44,7 +44,7 @@ export default function LoginPage() {
     if (!isFormValid) return;
 
     dispatch(loginSuccess({ email: normalizedEmail }));
-    navigate('/users');
+    navigate('/bookmarks');
   };
 
   return (
