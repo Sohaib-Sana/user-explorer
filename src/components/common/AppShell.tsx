@@ -43,7 +43,7 @@ export default function AppShell() {
 
           <Button
             asChild
-            colorPalette={isBookmarksPage ? 'blue' : 'gray'}
+            colorPalette={isBookmarksPage ? 'yellow' : 'gray'}
             variant={isBookmarksPage ? 'solid' : 'outline'}
           >
             <Link to="/bookmarks">Bookmarks</Link>

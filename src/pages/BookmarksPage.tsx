@@ -64,7 +64,7 @@ export default function BookmarksPage() {
 
   return (
     <Box>
-      <Heading size="lg" mb={6} color="black">
+      <Heading size="lg" mb={6} color="black" justifySelf='start'>
         Bookmarks
       </Heading>
 

@@ -1,11 +1,12 @@
 import {
   Avatar,
-  Button,
   Flex,
   Table,
   Text,
+  IconButton,
 } from '@chakra-ui/react';
-import { LuStar, LuStarOff } from 'react-icons/lu';
+import {  LuStarOff, LuPencil, LuTrash2 } from 'react-icons/lu';
+import { FaStar } from 'react-icons/fa'; //
 import { toaster } from '../../components/ui/toaster';
 import type { User } from '../../features/users/usersTypes';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
@@ -71,25 +72,56 @@ export default function UserCard({ user, onEdit }: Props) {
       <Table.Cell>{user.email}</Table.Cell>
       <Table.Cell>{user.phone || 'No phone'}</Table.Cell>
 
-      <Table.Cell>
-        <Flex gap={2} wrap="wrap">
-          <Button size="sm" onClick={handleEdit}>
-            Edit
-          </Button>
+     <Table.Cell>
+      <Flex gap={2} wrap="wrap">
 
-          <Button size="sm" colorPalette="red" variant="outline" onClick={handleDelete}>
-            Delete
-          </Button>
+        {/* Edit */}
+        <IconButton
+          aria-label="Edit user"
+          size="sm"
+          variant="ghost"
+          color="blue.500" // ✅ always blue
+          onClick={handleEdit}
+          _hover={{
+            bg: 'gray.100',
+            color: 'blue.600', // optional slightly darker on hover
+          }}
+        >
+          <LuPencil />
+        </IconButton>
 
-          <Button
-            size="sm"
-            colorPalette={bookmarked ? 'yellow' : 'gray'}
-            onClick={handleBookmark}
-          >
-            {bookmarked ? <LuStar /> : <LuStarOff />}
-          </Button>
-        </Flex>
-      </Table.Cell>
+        {/* Delete */}
+        <IconButton
+          aria-label="Delete user"
+          size="sm"
+          variant="ghost"
+          color="red.500" // ✅ always red
+          onClick={handleDelete}
+          _hover={{
+            bg: 'red.50',
+            color: 'red.600', // optional darker on hover
+          }}
+        >
+          <LuTrash2 />
+        </IconButton>
+
+        {/* Bookmark (unchanged) */}
+        <IconButton
+          aria-label="Bookmark user"
+          size="sm"
+          variant="ghost"
+          onClick={handleBookmark}
+          color={bookmarked ? 'yellow.400' : 'gray.500'}
+          _hover={{
+            bg: bookmarked ? 'yellow.50' : 'gray.100',
+            color: 'yellow.500',
+          }}
+        >
+          {bookmarked ? <FaStar /> : <LuStarOff />}
+        </IconButton>
+
+      </Flex>
+    </Table.Cell>
     </Table.Row>
   );
 }
