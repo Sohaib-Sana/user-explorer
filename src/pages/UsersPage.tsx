@@ -3,35 +3,34 @@ import {
   Button,
   Flex,
   Heading,
-  Input,
   Spinner,
   Table,
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { fetchUsers, searchUsers } from '../features/users/usersThunks';
 import { setSelectedUser } from '../features/users/usersSlice';
 import UserCard from '../components/users/UserCard';
 import UserFormDrawer from '../components/users/UserFormDrawer';
+import SearchField from '../components/common/SearchField';
 
 export default function UsersPage() {
   const dispatch = useAppDispatch();
   const { items, fetchStatus, error } = useAppSelector((state) => state.users);
-  const [search, setSearch] = useState('');
   const { open, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
     dispatch(fetchUsers({ limit: 12, skip: 0 }));
   }, [dispatch]);
 
-  const handleSearch = () => {
-    if (!search.trim()) {
-      dispatch(fetchUsers({ limit: 12, skip: 0 }));
-      return;
-    }
-    dispatch(searchUsers(search.trim()));
+  const handleSearch = (query: string) => {
+    dispatch(searchUsers(query));
+  };
+
+  const handleClear = () => {
+    dispatch(fetchUsers({ limit: 12, skip: 0 }));
   };
 
   const handleAdd = () => {
@@ -47,22 +46,19 @@ export default function UsersPage() {
   return (
     <Box>
       <Flex justify="space-between" align="center" mb={6} wrap="wrap" gap={3}>
-        <Heading size="lg" color='black'>Users</Heading>
+        <Heading size="lg" color="black">Users</Heading>
         <Button colorPalette="blue" onClick={handleAdd}>
           Add User
         </Button>
       </Flex>
 
-      <Flex gap={3} mb={6}>
-        <Input
+      <Flex gap={3} mb={6} width="100%">
+        <SearchField
           placeholder="Search users..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') handleSearch();
-          }}
+          onSearch={handleSearch}
+          onClear={handleClear}
+          debounceDelay={500}
         />
-        <Button onClick={handleSearch}>Search</Button>
       </Flex>
 
       {fetchStatus === 'loading' && (

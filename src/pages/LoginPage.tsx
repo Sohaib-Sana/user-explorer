@@ -25,7 +25,7 @@ export default function LoginPage() {
   return (
     <Card.Root maxW="480px" mx="auto">
       <Card.Body>
-        <Heading size="md" mb={6}>
+        <Heading size="md" mb={6} color="black">
           Login
         </Heading>
 
