@@ -14,9 +14,11 @@ export default function LoginPage() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!email || !password) return;
+    const normalizedEmail = email.trim().toLowerCase();
 
-    dispatch(loginSuccess({ email }));
+    if (!normalizedEmail || !password) return;
+
+    dispatch(loginSuccess({ email: normalizedEmail }));
     navigate('/users');
   };
 

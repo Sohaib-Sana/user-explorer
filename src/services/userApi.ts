@@ -7,6 +7,11 @@ export const usersApi = {
     return data;
   },
 
+  getUserById: async (id: number): Promise<User> => {
+    const { data } = await api.get(`/users/${id}`);
+    return data;
+  },
+
   searchUsers: async (query: string): Promise<UsersResponse> => {
     const { data } = await api.get(`/users/search?q=${encodeURIComponent(query)}`);
     return data;

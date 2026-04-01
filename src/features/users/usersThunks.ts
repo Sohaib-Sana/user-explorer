@@ -9,6 +9,14 @@ export const fetchUsers = createAsyncThunk(
   }
 );
 
+export const fetchUsersByIds = createAsyncThunk(
+  'users/fetchUsersByIds',
+  async (ids: number[]) => {
+    const users = await Promise.all(ids.map((id) => usersApi.getUserById(id)));
+    return users;
+  }
+);
+
 export const searchUsers = createAsyncThunk(
   'users/searchUsers',
   async (query: string) => {

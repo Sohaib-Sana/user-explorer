@@ -1,4 +1,10 @@
-import { Avatar, Button, Card, Flex, Heading, Text, VStack } from '@chakra-ui/react';
+import {
+  Avatar,
+  Button,
+  Flex,
+  Table,
+  Text,
+} from '@chakra-ui/react';
 import { toaster } from '../../components/ui/toaster';
 import type { User } from '../../features/users/usersTypes';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
@@ -14,7 +20,7 @@ interface Props {
 export default function UserCard({ user, onEdit }: Props) {
   const dispatch = useAppDispatch();
 
-  const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
+  const { isAuthenticated, user: authUser } = useAppSelector((state) => state.auth);
   const bookmarked = useAppSelector((state) => state.bookmarks.ids.includes(user.id));
 
   const handleEdit = () => {
@@ -29,7 +35,7 @@ export default function UserCard({ user, onEdit }: Props) {
   };
 
   const handleBookmark = () => {
-    if (!isAuthenticated) {
+    if (!isAuthenticated || !authUser?.email) {
       toaster.create({
         title: 'Login required',
         description: 'You must be logged in to bookmark users.',
@@ -39,33 +45,32 @@ export default function UserCard({ user, onEdit }: Props) {
       return;
     }
 
-    dispatch(toggleBookmark(user.id));
+    dispatch(
+      toggleBookmark({
+        userId: user.id,
+        email: authUser.email,
+      })
+    );
   };
 
   return (
-    <Card.Root>
-      <Card.Body>
-        <Flex align="start" justify="space-between" mb={4}>
-          <Flex gap={3}>
-            <Avatar.Root>
-              <Avatar.Fallback name={`${user.firstName} ${user.lastName}`} />
-              <Avatar.Image src={user.image} />
-            </Avatar.Root>
-
-            <VStack align="start" gap={0}>
-              <Heading size="sm">
-                {user.firstName} {user.lastName}
-              </Heading>
-              <Text fontSize="sm" color="gray.600">
-                {user.email}
-              </Text>
-              <Text fontSize="sm" color="gray.500">
-                {user.phone || 'No phone'}
-              </Text>
-            </VStack>
-          </Flex>
+    <Table.Row>
+      <Table.Cell>
+        <Flex align="center" gap={3}>
+          <Avatar.Root size="sm">
+            <Avatar.Fallback name={`${user.firstName} ${user.lastName}`} />
+            <Avatar.Image src={user.image} />
+          </Avatar.Root>
+          <Text fontWeight="medium">
+            {user.firstName} {user.lastName}
+          </Text>
         </Flex>
+      </Table.Cell>
 
+      <Table.Cell>{user.email}</Table.Cell>
+      <Table.Cell>{user.phone || 'No phone'}</Table.Cell>
+
+      <Table.Cell>
         <Flex gap={2} wrap="wrap">
           <Button size="sm" onClick={handleEdit}>
             Edit
@@ -83,7 +88,7 @@ export default function UserCard({ user, onEdit }: Props) {
             {bookmarked ? 'Bookmarked' : 'Bookmark'}
           </Button>
         </Flex>
-      </Card.Body>
-    </Card.Root>
+      </Table.Cell>
+    </Table.Row>
   );
 }

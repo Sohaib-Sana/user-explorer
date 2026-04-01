@@ -1,7 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { User } from './usersTypes';
-import { addUser, deleteUser, fetchUsers, searchUsers, updateUser } from './usersThunks';
+import {
+  addUser,
+  deleteUser,
+  fetchUsers,
+  fetchUsersByIds,
+  searchUsers,
+  updateUser,
+} from './usersThunks';
 
 type Status = 'idle' | 'loading' | 'succeeded' | 'failed';
 
@@ -19,7 +26,6 @@ interface UsersState {
   error: string | null;
 }
 
-
 const initialState: UsersState = {
   items: [],
   total: 0,
@@ -32,6 +38,20 @@ const initialState: UsersState = {
   updateStatus: 'idle',
   deleteStatus: 'idle',
   error: null,
+};
+
+const mergeUsers = (existing: User[], incoming: User[]) => {
+  const map = new Map<number, User>();
+
+  existing.forEach((user) => {
+    map.set(user.id, user);
+  });
+
+  incoming.forEach((user) => {
+    map.set(user.id, user);
+  });
+
+  return Array.from(map.values());
 };
 
 const usersSlice = createSlice({
@@ -66,6 +86,16 @@ const usersSlice = createSlice({
       .addCase(fetchUsers.rejected, (state, action) => {
         state.fetchStatus = 'failed';
         state.error = action.error.message || 'Failed to fetch users';
+      })
+
+      .addCase(fetchUsersByIds.pending, (state) => {
+        state.error = null;
+      })
+      .addCase(fetchUsersByIds.fulfilled, (state, action) => {
+        state.items = mergeUsers(state.items, action.payload);
+      })
+      .addCase(fetchUsersByIds.rejected, (state, action) => {
+        state.error = action.error.message || 'Failed to fetch bookmarked users';
       })
 
       .addCase(searchUsers.pending, (state) => {

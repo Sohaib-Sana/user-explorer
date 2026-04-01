@@ -6,7 +6,7 @@ import { router } from './router'
 import { AppToaster } from '../components/ui/toaster'
 
 
-export default function Providers() {
+export default function App() {
   return (
     <Provider store={store}>
       <ChakraProvider  value={defaultSystem}>

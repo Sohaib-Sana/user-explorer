@@ -4,8 +4,8 @@ import {
   Flex,
   Heading,
   Input,
-  SimpleGrid,
   Spinner,
+  Table,
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
@@ -31,7 +31,7 @@ export default function UsersPage() {
       dispatch(fetchUsers({ limit: 12, skip: 0 }));
       return;
     }
-    dispatch(searchUsers(search));
+    dispatch(searchUsers(search.trim()));
   };
 
   const handleAdd = () => {
@@ -39,11 +39,16 @@ export default function UsersPage() {
     onOpen();
   };
 
+  const handleDrawerClose = () => {
+    dispatch(setSelectedUser(null));
+    onClose();
+  };
+
   return (
     <Box>
       <Flex justify="space-between" align="center" mb={6} wrap="wrap" gap={3}>
-        <Heading size="lg">Users</Heading>
-        <Button colorScheme="blue" onClick={handleAdd}>
+        <Heading size="lg" color='black'>Users</Heading>
+        <Button colorPalette="blue" onClick={handleAdd}>
           Add User
         </Button>
       </Flex>
@@ -75,14 +80,33 @@ export default function UsersPage() {
       )}
 
       {fetchStatus === 'succeeded' && items.length > 0 && (
-        <SimpleGrid columns={{ base: 1, md: 2, xl: 3 }} spaceX={4}>
-          {items.map((user) => (
-            <UserCard key={user.id} user={user} onEdit={onOpen} />
-          ))}
-        </SimpleGrid>
+       <Box
+          bg="white"
+          borderWidth="1px"
+          borderColor="gray.200"
+          rounded="xl"
+          shadow="xs"
+          overflow="hidden"
+        >
+          <Table.Root variant="line">
+            <Table.Header>
+              <Table.Row>
+                <Table.ColumnHeader>Name</Table.ColumnHeader>
+                <Table.ColumnHeader>Email</Table.ColumnHeader>
+                <Table.ColumnHeader>Phone</Table.ColumnHeader>
+                <Table.ColumnHeader>Actions</Table.ColumnHeader>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {items.map((user) => (
+                <UserCard key={user.id} user={user} onEdit={onOpen} />
+              ))}
+            </Table.Body>
+          </Table.Root>
+        </Box>
       )}
 
-      <UserFormDrawer isOpen={open} onClose={onClose} />
+      <UserFormDrawer isOpen={open} onClose={handleDrawerClose} />
     </Box>
   );
 }
