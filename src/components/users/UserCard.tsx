@@ -5,6 +5,7 @@ import {
   Table,
   Text,
 } from '@chakra-ui/react';
+import { LuStar, LuStarOff } from 'react-icons/lu';
 import { toaster } from '../../components/ui/toaster';
 import type { User } from '../../features/users/usersTypes';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
@@ -85,7 +86,7 @@ export default function UserCard({ user, onEdit }: Props) {
             colorPalette={bookmarked ? 'yellow' : 'gray'}
             onClick={handleBookmark}
           >
-            {bookmarked ? 'Bookmarked' : 'Bookmark'}
+            {bookmarked ? <LuStar /> : <LuStarOff />}
           </Button>
         </Flex>
       </Table.Cell>

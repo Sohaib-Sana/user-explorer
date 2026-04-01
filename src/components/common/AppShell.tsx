@@ -1,12 +1,16 @@
 import { Box, Button, Flex, Heading, Spacer } from '@chakra-ui/react';
-import { Link, Outlet, useNavigate } from 'react-router-dom';
+import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { logout } from '../../features/auth/authSlice';
 
 export default function AppShell() {
   const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useAppDispatch();
   const { isAuthenticated, user } = useAppSelector((state) => state.auth);
+
+  const isUsersPage = location.pathname === '/users' || location.pathname === '/';
+  const isBookmarksPage = location.pathname === '/bookmarks' || location.pathname === '/login';
 
   return (
     <Box minH="100vh" w="100%" bg="white">
@@ -29,11 +33,19 @@ export default function AppShell() {
         <Spacer />
 
         <Flex gap={3}>
-          <Button asChild colorPalette="blue">
+          <Button
+            asChild
+            colorPalette={isUsersPage ? 'blue' : 'gray'}
+            variant={isUsersPage ? 'solid' : 'outline'}
+          >
             <Link to="/users">Users</Link>
           </Button>
 
-          <Button asChild colorPalette="blue">
+          <Button
+            asChild
+            colorPalette={isBookmarksPage ? 'blue' : 'gray'}
+            variant={isBookmarksPage ? 'solid' : 'outline'}
+          >
             <Link to="/bookmarks">Bookmarks</Link>
           </Button>
 
