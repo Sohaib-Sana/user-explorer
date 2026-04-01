@@ -1,4 +1,14 @@
-import { Box, Button, Flex, Heading, Spacer } from '@chakra-ui/react';
+import {
+  Avatar,
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Menu,
+  Portal,
+  Spacer,
+  Text,
+} from '@chakra-ui/react';
 import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { logout } from '../../features/auth/authSlice';
@@ -10,7 +20,8 @@ export default function AppShell() {
   const { isAuthenticated, user } = useAppSelector((state) => state.auth);
 
   const isUsersPage = location.pathname === '/users' || location.pathname === '/';
-  const isBookmarksPage = location.pathname === '/bookmarks' || location.pathname === '/login';
+  const isBookmarksPage =
+    location.pathname === '/bookmarks' || location.pathname === '/login';
 
   return (
     <Box minH="100vh" w="100%" bg="white">
@@ -32,7 +43,7 @@ export default function AppShell() {
 
         <Spacer />
 
-        <Flex gap={3}>
+        <Flex gap={3} align="center">
           <Button
             asChild
             colorPalette={isUsersPage ? 'blue' : 'gray'}
@@ -49,22 +60,51 @@ export default function AppShell() {
             <Link to="/bookmarks">Bookmarks</Link>
           </Button>
 
-          {isAuthenticated ? (
-            <Button
-              colorPalette="red"
-              variant="outline"
-              onClick={() => {
-                dispatch(logout());
-                navigate('/login');
-              }}
-            >
-              Logout {user?.email ? `(${user.email})` : ''}
-            </Button>
-          ) : (
-            <Button asChild colorPalette="blue">
-              <Link to="/login">Login</Link>
-            </Button>
-          )}
+          {isAuthenticated && (
+            <Menu.Root positioning={{ placement: 'bottom-end' }}>
+              <Menu.Trigger asChild>
+                <Button
+                  variant="ghost"
+                  p={0}
+                  minW="auto"
+                  h="auto"
+                  rounded="full"
+                >
+                  <Avatar.Root size="sm">
+                    <Avatar.Fallback name={user?.email || 'User'} />
+                  </Avatar.Root>
+                </Button>
+              </Menu.Trigger>
+
+              <Portal>
+                <Menu.Positioner>
+                  <Menu.Content minW="220px">
+                    <Box px={3} py={2}>
+                      <Text fontSize="sm" color="gray.500">
+                        Signed in as
+                      </Text>
+                      <Text fontSize="sm" fontWeight="medium" color="black">
+                        {user?.email || 'No email'}
+                      </Text>
+                    </Box>
+
+                    <Menu.Separator />
+
+                    <Menu.Item
+                      value="logout"
+                      color="red.500"
+                      onClick={() => {
+                        dispatch(logout());
+                        navigate('/login');
+                      }}
+                    >
+                      Logout
+                    </Menu.Item>
+                  </Menu.Content>
+                </Menu.Positioner>
+              </Portal>
+            </Menu.Root>
+          ) }
         </Flex>
       </Flex>
 
