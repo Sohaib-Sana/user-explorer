@@ -28,8 +28,25 @@ const persist = (byUser: Record<string, number[]>) => {
 
 const initialByUser = loadBookmarks();
 
+// Check if there's stored auth data and load bookmarks for that user
+const getInitialIds = (): number[] => {
+  try {
+    const storedAuth = localStorage.getItem('auth');
+    if (storedAuth) {
+      const authData = JSON.parse(storedAuth);
+      if (authData.isAuthenticated && authData.user?.email) {
+        const email = authData.user.email.trim().toLowerCase();
+        return initialByUser[email] || [];
+      }
+    }
+  } catch {
+    // Ignore errors
+  }
+  return [];
+};
+
 const initialState: BookmarksState = {
-  ids: [],
+  ids: getInitialIds(),
   byUser: initialByUser,
 };
 
