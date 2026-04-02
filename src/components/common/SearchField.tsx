@@ -63,14 +63,14 @@ export default function SearchField({
         value={value}
         onChange={handleInputChange}
         flex={1}
-         focusRingColor={"#967DFE"}
+         focusRingColor={"#63c94e"}
          h="36px"
       />
      <Button
         onClick={handleClear}
         colorPalette="gray"
         variant="outline"
-        focusRingColor="#967DFE"
+        focusRingColor="#63c94e"
         h="36px"
         gap={2}
       >

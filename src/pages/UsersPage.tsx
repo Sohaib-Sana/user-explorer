@@ -80,7 +80,7 @@ export default function UsersPage() {
         <Heading size="lg" color="black">
           Users
         </Heading>
-        <Button colorPalette="brand" onClick={handleAdd} backgroundColor={'#967DFE'}  h="35px">
+        <Button colorPalette="brand" onClick={handleAdd} backgroundColor={'#63c94e'}  h="35px">
           + Add User
         </Button>
       </Flex>

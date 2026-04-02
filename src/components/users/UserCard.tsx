@@ -93,90 +93,98 @@ export default function UserCard({ user, onEdit, layout = 'table' }: Props) {
   };
 
   if (layout === 'card') {
-  return (
-    <>
-      <Box
-        p={4}
-        mb={3}
-        borderWidth="1px"
-        borderColor="gray.200"
-        rounded="lg"
-        shadow="xs"
-        bg="white"
-        w="100%"
-      >
-        {/* Top section */}
-        <Flex align="flex-start" justify="space-between" mb={3} gap={2}>
-          <Flex align="center" gap={3}>
-            <Avatar.Root size="sm">
-              <Avatar.Fallback name={`${user.firstName} ${user.lastName}`} />
-              {user.image ? <Avatar.Image src={user.image} /> : null}
-            </Avatar.Root>
+      return (
+        <>
+          <Box
+            p={4}
+            mb={3}
+            borderWidth="1px"
+            borderColor="gray.200"
+            rounded="lg"
+            shadow="xs"
+            bg="white"
+            w="100%"
+          >
+            <Flex align="flex-start" justify="space-between" mb={3} gap={2}>
+              <Flex align="center" gap={3}>
+                <Avatar.Root size="sm">
+                  <Avatar.Fallback name={`${user.firstName} ${user.lastName}`} />
+                  {user.image ? <Avatar.Image src={user.image} /> : null}
+                </Avatar.Root>
 
-            <Box>
-              <Text fontWeight="bold">
-                {user.firstName} {user.lastName}
-              </Text>
-              <Text fontSize="sm" color="gray.600">
-                {user.email}
-              </Text>
-              <Text fontSize="sm" color="gray.600">
-                {user.phone || 'No phone'}
-              </Text>
-            </Box>
+               <Box textAlign="left">
+                <Text color="black" fontWeight="medium">
+                  {/* <Text as="span" fontWeight="bold">Name: </Text> */}
+                  {user.firstName} {user.lastName}
+                </Text>
+
+               <Text fontSize="sm" color="gray.600">
+                  {/* <Text as="span" fontWeight="bold">Email: </Text> */}
+                  {user.email}
+                </Text>
+
+                <Text fontSize="sm" color="gray.600">
+                  {/* <Text as="span" fontWeight="bold">Phone: </Text> */}
+                  {user.phone || 'No phone'}
+                </Text>
+              </Box>
+            </Flex>
+
+
+              <IconButton
+                aria-label="Bookmark user"
+                size="sm"
+                variant="ghost"
+                onClick={handleBookmark}
+                color={bookmarked ? 'yellow.400' : 'gray.400'}
+                _hover={{
+                  bg: bookmarked ? 'purple.50' : 'gray.100',
+                  color: '#63c94e',
+                }}
+              >
+                {bookmarked ? <LuBookmarkCheck size={16} /> : <LuBookmark size={16} />}
+              </IconButton>
+            </Flex>
+
+
+            <Box borderTop="1px solid" borderColor="gray.100" my={3} />
+
+          <Flex gap={4} justify="center" wrap="wrap">
+            <Button
+              variant="outline"
+              onClick={handleEdit}
+              h="35px"
+              minW="100px"
+              px={4}
+            >
+              Edit
+            </Button>
+
+            <Button
+              variant="outline"
+              colorPalette="red"
+              onClick={handleDelete}
+              h="35px"
+              minW="100px"
+              px={4}
+            >
+              Delete
+            </Button>
           </Flex>
+          </Box>
 
-
-          <IconButton
-            aria-label="Bookmark user"
-            size="sm"
-            variant="ghost"
-            onClick={handleBookmark}
-            color={bookmarked ? '#967DFE' : 'gray.400'}
-            _hover={{
-              bg: bookmarked ? 'purple.50' : 'gray.100',
-              color: '#967DFE',
-            }}
-          >
-            {bookmarked ? <LuBookmarkCheck size={16} /> : <LuBookmark size={16} />}
-          </IconButton>
-        </Flex>
-
-
-        <Box borderTop="1px solid" borderColor="gray.100" my={3} />
-
-        <Flex gap={3}>
-          <Button
-            flex={1}
-            variant="outline"
-            onClick={handleEdit}
-          >
-            Edit
-          </Button>
-
-          <Button
-            flex={1}
-            variant="outline"
-            colorPalette="red"
-            onClick={handleDelete}
-          >
-            Delete
-          </Button>
-        </Flex>
-      </Box>
-
-      <DeleteConfirmationDialog
-        isOpen={isDeleteDialogOpen}
-        onClose={handleCancelDelete}
-        onConfirm={handleConfirmDelete}
-        title="Delete User"
-        description={`Are you sure you want to delete ${user.firstName} ${user.lastName}? This action cannot be undone.`}
-        confirmText="Delete"
-        cancelText="Cancel"
-      />
-    </>
-  );
-}
+          <DeleteConfirmationDialog
+            isOpen={isDeleteDialogOpen}
+            onClose={handleCancelDelete}
+            onConfirm={handleConfirmDelete}
+            title="Delete User"
+            description={`Are you sure you want to delete ${user.firstName} ${user.lastName}? This action cannot be undone.`}
+            confirmText="Delete"
+            cancelText="Cancel"
+          />
+        </>
+      );
+    }
 
   return (
     <>
@@ -237,7 +245,7 @@ export default function UserCard({ user, onEdit, layout = 'table' }: Props) {
           color={bookmarked ? 'yellow.400' : 'gray.400'}
           _hover={{
             bg: bookmarked ? 'purple.50' : 'gray.100',
-            color: '#967DFE',
+            color: '#63c94e',
           }}
         >
           {bookmarked ? <LuBookmarkCheck size={16} /> : <LuBookmark size={16} />}

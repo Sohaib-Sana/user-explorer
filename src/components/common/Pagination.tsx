@@ -61,6 +61,7 @@ export default function Pagination({
         <Button
           variant="outline"
           size="sm"
+          rounded="lg"
           onClick={() => goToPage(currentPage + 1)}
           disabled={isLastPage || isLoading}
         >
@@ -70,6 +71,7 @@ export default function Pagination({
         <Button
           variant="outline"
           size="sm"
+          rounded="lg"
           onClick={() => goToPage(totalPages)}
           disabled={isLastPage || isLoading}
         >

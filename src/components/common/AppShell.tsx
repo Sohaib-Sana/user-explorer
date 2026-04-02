@@ -2,7 +2,7 @@ import {
   Avatar,
   Box,
   Button,
-  ButtonGroup,
+
   Flex,
   Heading,
   Menu,
@@ -66,7 +66,7 @@ export default function AppShell() {
                     h="auto"
                     rounded="full"
                   >
-                    <Avatar.Root size="sm" background="#967DFE" color="white">
+                    <Avatar.Root size="sm" background="#63c94e" color="white">
                       <Avatar.Fallback
                         name={user?.email || 'User'}
                         fontSize="lg"
@@ -120,7 +120,7 @@ export default function AppShell() {
               <Flex
                 p="3px"
                 rounded="full"
-                bg="linear-gradient(90deg, #7B2FF7 0%, #967DFE 100%)"
+                bg="linear-gradient(90deg, #54b740 0%, #63c94e 100%)"
                 w={{ base: '220px', sm: '240px' }}
               >
                 <Button
@@ -132,7 +132,7 @@ export default function AppShell() {
                   onClick={() => setViewMode('list')}
                   rounded="full"
                   bg={viewMode === 'list' ? 'white' : 'transparent'}
-                  color={viewMode === 'list' ? '#7B2FF7' : 'white'}
+                  color={viewMode === 'list' ? '#54b740' : 'white'}
                   fontWeight="semibold"
                   _hover={{
                     bg: viewMode === 'list' ? 'white' : 'transparent',
@@ -153,7 +153,7 @@ export default function AppShell() {
                   onClick={() => setViewMode('grid')}
                   rounded="full"
                   bg={viewMode === 'grid' ? 'white' : 'transparent'}
-                  color={viewMode === 'grid' ? '#7B2FF7' : 'white'}
+                  color={viewMode === 'grid' ? '#54b740' : 'white'}
                   fontWeight="semibold"
                   _hover={{
                     bg: viewMode === 'grid' ? 'white' : 'transparent',
@@ -184,7 +184,7 @@ export default function AppShell() {
               px={3}
               fontSize="sm"
               flex={{ base: 1, md: 'unset' }}
-              backgroundColor={isUsersPage ? '#967DFE' : 'transparent'}
+              backgroundColor={isUsersPage ? '#63c94e' : 'transparent'}
             >
               <Link to="/users">Users</Link>
             </Button>
@@ -197,7 +197,7 @@ export default function AppShell() {
               px={3}
               fontSize="sm"
               flex={{ base: 1, md: 'unset' }}
-              backgroundColor={isBookmarksPage ? '#967DFE' : 'transparent'}
+              backgroundColor={isBookmarksPage ? '#63c94e' : 'transparent'}
             >
               {isAuthenticated ? (
                 <Link to="/bookmarks">Bookmarks</Link>

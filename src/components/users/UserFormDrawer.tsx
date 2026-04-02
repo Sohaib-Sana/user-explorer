@@ -136,10 +136,10 @@ export default function UserFormDrawer({ isOpen, onClose }: Props) {
                 </VStack>
               </Dialog.Body>
               <Dialog.Footer>
-                <Button mr={2} variant="outline" onClick={onClose}>
+                <Button mr={2} variant="outline" onClick={onClose} h="35px">
                   Cancel
                 </Button>
-                <Button type="submit" backgroundColor="#967DFE" loading={loading}>
+                <Button type="submit" backgroundColor="#63c94e" loading={loading} h="35px">
                   {isEditing ? 'Update' : 'Add'}
                 </Button>
               </Dialog.Footer>

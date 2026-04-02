@@ -9,21 +9,20 @@ import {
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAppDispatch } from '../app/hooks';
-import { loginSuccess } from '../features/auth/authSlice';
 import { toaster } from '../components/ui/toaster';
 import type { RegisteredUser } from '../features/auth/authTypes';
 
-export default function LoginPage() {
-  const dispatch = useAppDispatch();
+export default function SignupPage() {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   const [touched, setTouched] = useState({
     email: false,
     password: false,
+    confirmPassword: false,
   });
 
   const normalizedEmail = email.trim().toLowerCase();
@@ -41,7 +40,13 @@ export default function LoginPage() {
     return '';
   })();
 
-  const isFormValid = !emailError && !passwordError;
+  const confirmPasswordError = (() => {
+    if (!confirmPassword) return 'Confirm password is required';
+    if (confirmPassword !== password) return 'Passwords do not match';
+    return '';
+  })();
+
+  const isFormValid = !emailError && !passwordError && !confirmPasswordError;
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -49,6 +54,7 @@ export default function LoginPage() {
     setTouched({
       email: true,
       password: true,
+      confirmPassword: true,
     });
 
     if (!isFormValid) return;
@@ -56,29 +62,43 @@ export default function LoginPage() {
     const storedUsers = localStorage.getItem('registeredUsers');
     const users: RegisteredUser[] = storedUsers ? JSON.parse(storedUsers) : [];
 
-    const matchedUser = users.find(
-      (user) => user.email === normalizedEmail && user.password === password
-    );
+    const alreadyExists = users.some((user) => user.email === normalizedEmail);
 
-    if (!matchedUser) {
+    if (alreadyExists) {
       toaster.create({
-        title: 'Login failed',
-        description: 'Invalid email or password.',
+        title: 'Account already exists',
+        description: 'An account with this email already exists.',
         type: 'error',
         meta: { closable: true },
       });
       return;
     }
 
-    dispatch(loginSuccess({ email: matchedUser.email }));
-    navigate('/bookmarks');
+    const newUser: RegisteredUser = {
+      email: normalizedEmail,
+      password,
+    };
+
+    localStorage.setItem(
+      'registeredUsers',
+      JSON.stringify([...users, newUser])
+    );
+
+    toaster.create({
+      title: 'Signup successful',
+      description: 'Your account has been created. Please log in.',
+      type: 'success',
+      meta: { closable: true },
+    });
+
+    navigate('/login');
   };
 
   return (
     <Card.Root maxW="480px" mx="auto">
       <Card.Body>
         <Heading size="md" mb={6} color="black">
-          Login
+          Signup
         </Heading>
 
         <form onSubmit={handleSubmit} noValidate>
@@ -89,9 +109,7 @@ export default function LoginPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                onBlur={() =>
-                  setTouched((prev) => ({ ...prev, email: true }))
-                }
+                onBlur={() => setTouched((prev) => ({ ...prev, email: true }))}
                 placeholder="you@example.com"
               />
               <Field.ErrorText>{emailError}</Field.ErrorText>
@@ -111,14 +129,31 @@ export default function LoginPage() {
               <Field.ErrorText>{passwordError}</Field.ErrorText>
             </Field.Root>
 
+            <Field.Root
+              required
+              invalid={touched.confirmPassword && !!confirmPasswordError}
+            >
+              <Field.Label>Confirm Password</Field.Label>
+              <Input
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                onBlur={() =>
+                  setTouched((prev) => ({ ...prev, confirmPassword: true }))
+                }
+                placeholder="••••••••"
+              />
+              <Field.ErrorText>{confirmPasswordError}</Field.ErrorText>
+            </Field.Root>
+
             <Button type="submit" backgroundColor="#63c94e" color="white">
-              Login
+              Signup
             </Button>
 
             <Text fontSize="sm" textAlign="center" color="gray.600">
-              Don&apos;t have an account?{' '}
+              Already have an account?{' '}
               <Text as="span" color="#63c94e" fontWeight="medium">
-                <Link to="/signup">Signup now</Link>
+                <Link to="/login">Login</Link>
               </Text>
             </Text>
           </VStack>
