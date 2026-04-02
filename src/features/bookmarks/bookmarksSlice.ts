@@ -16,7 +16,17 @@ const loadBookmarks = (): Record<string, number[]> => {
     if (!stored) return {};
 
     const parsed = JSON.parse(stored);
-    return parsed && typeof parsed === 'object' ? parsed : {};
+    if (!parsed || typeof parsed !== 'object') return {};
+
+    const normalized: Record<string, number[]> = {};
+    Object.entries(parsed).forEach(([email, ids]) => {
+      if (Array.isArray(ids)) {
+        normalized[email] = ids.filter((id) => typeof id === 'number');
+      } else {
+        normalized[email] = [];
+      }
+    });
+    return normalized;
   } catch {
     return {};
   }
@@ -61,7 +71,7 @@ const bookmarksSlice = createSlice({
       const { userId, email } = action.payload;
       const key = email.trim().toLowerCase();
 
-      const currentIds = state.byUser[key] || [];
+      const currentIds = Array.isArray(state.byUser[key]) ? state.byUser[key] : [];
       const exists = currentIds.includes(userId);
 
       const nextIds = exists
@@ -91,9 +101,8 @@ const bookmarksSlice = createSlice({
         const deletedUserId = action.payload;
 
         Object.keys(state.byUser).forEach((email) => {
-          state.byUser[email] = state.byUser[email].filter(
-            (id) => id !== deletedUserId
-          );
+          const ids = Array.isArray(state.byUser[email]) ? state.byUser[email] : [];
+          state.byUser[email] = ids.filter((id) => id !== deletedUserId);
         });
 
         state.ids = state.ids.filter((id) => id !== deletedUserId);

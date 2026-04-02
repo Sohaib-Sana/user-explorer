@@ -39,7 +39,22 @@ export default function UserCard({ user, onEdit }: Props) {
 
   const handleConfirmDelete = async () => {
     setIsDeleteDialogOpen(false);
-    await dispatch(deleteUser(user.id));
+    try {
+      await dispatch(deleteUser(user.id)).unwrap();
+      toaster.create({
+        title: 'User deleted',
+        description: `The user "${user.firstName} ${user.lastName}" was deleted.`,
+        type: 'success',
+        meta: { closable: true },
+      });
+    } catch (error) {
+      toaster.create({
+        title: 'Delete failed',
+        description: 'Could not delete the user. Please try again.',
+        type: 'error',
+        meta: { closable: true },
+      });
+    }
   };
 
   const handleCancelDelete = () => {
@@ -63,6 +78,14 @@ export default function UserCard({ user, onEdit }: Props) {
         email: authUser.email,
       })
     );
+
+    const actionLabel = bookmarked ? 'Removed bookmark for' : 'Bookmarked';
+    toaster.create({
+      title: 'Bookmark updated',
+      description: `${actionLabel} user "${user.firstName} ${user.lastName}".`,
+      type: 'success',
+      meta: { closable: true },
+    });
   };
 
   return (

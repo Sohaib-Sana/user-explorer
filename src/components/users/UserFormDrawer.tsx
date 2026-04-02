@@ -10,6 +10,7 @@ import {
 import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { addUser, updateUser } from '../../features/users/usersThunks';
+import { toaster } from '../ui/toaster';
 
 interface Props {
   isOpen: boolean;
@@ -49,10 +50,32 @@ export default function UserFormDrawer({ isOpen, onClose }: Props) {
 
     const payload = { firstName, lastName, email, phone };
 
-    if (isEditing && selectedUser) {
-      await dispatch(updateUser({ id: selectedUser.id, payload }));
-    } else {
-      await dispatch(addUser(payload));
+    try {
+      if (isEditing && selectedUser) {
+        await dispatch(updateUser({ id: selectedUser.id, payload })).unwrap();
+        toaster.create({
+          title: 'User updated',
+          description: `Updated the user "${payload.firstName} ${payload.lastName}".`,
+          type: 'success',
+          meta: { closable: true },
+        });
+      } else {
+        await dispatch(addUser(payload)).unwrap();
+        toaster.create({
+          title: 'User added',
+          description: `Created a new user "${payload.firstName} ${payload.lastName}".`,
+          type: 'success',
+          meta: { closable: true },
+        });
+      }
+    } catch (error) {
+      toaster.create({
+        title: 'Save failed',
+        description: 'Could not save user details. Please try again.',
+        type: 'error',
+        meta: { closable: true },
+      });
+      return;
     }
 
     onClose();
