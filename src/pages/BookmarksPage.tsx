@@ -1,13 +1,14 @@
 import {
   Box,
   Flex,
+  Grid,
   Heading,
   Table,
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
 import { useEffect, useMemo, useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useOutletContext } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { setSelectedUser } from '../features/users/usersSlice';
 import { fetchUsersByIds } from '../features/users/usersThunks';
@@ -15,8 +16,11 @@ import UserCard from '../components/users/UserCard';
 import UserFormDrawer from '../components/users/UserFormDrawer';
 import SearchField from '../components/common/SearchField';
 import Pagination from '../components/common/Pagination';
+import type { ViewMode } from '../components/common/AppShell';
 
 export default function BookmarksPage() {
+  const { viewMode } = useOutletContext<{ viewMode: ViewMode }>();
+
   const dispatch = useAppDispatch();
   const { open, onOpen, onClose } = useDisclosure();
   const [searchQuery, setSearchQuery] = useState('');
@@ -41,7 +45,6 @@ export default function BookmarksPage() {
     .map((id) => users.find((user) => user.id === id))
     .filter(Boolean);
 
-  // Filter bookmarked users based on search query
   const filteredUsers = searchQuery.trim()
     ? bookmarkedUsers.filter(
         (user) =>
@@ -82,7 +85,7 @@ export default function BookmarksPage() {
 
   return (
     <Box>
-      <Heading size="lg" mb={6} color="black" justifySelf='start'>
+      <Heading size="lg" mb={6} color="black" justifySelf="start">
         Bookmarks
       </Heading>
 
@@ -101,30 +104,49 @@ export default function BookmarksPage() {
         <Text>No users match your search.</Text>
       ) : (
         <>
-          <Box
-            bg="white"
-            borderWidth="1px"
-            borderColor="gray.200"
-            rounded="xl"
-            shadow="xs"
-            overflow="hidden"
-          >
-            <Table.Root variant="line">
-              <Table.Header>
-                <Table.Row>
-                  <Table.ColumnHeader>Name</Table.ColumnHeader>
-                  <Table.ColumnHeader>Email</Table.ColumnHeader>
-                  <Table.ColumnHeader>Phone</Table.ColumnHeader>
-                  <Table.ColumnHeader>Actions</Table.ColumnHeader>
-                </Table.Row>
-              </Table.Header>
-              <Table.Body>
+          {viewMode === 'grid' ? (
+            <Box minH="420px" w="100%" overflowX="hidden">
+             <Grid
+                templateColumns={{
+                  base: '1fr',
+                  md: 'repeat(2, 1fr)',
+                  xl: 'repeat(3, 1fr)',
+                }}
+                gap={{ base: 4, md: 5 }}
+                w="100%"
+              >
                 {visibleUsers.map((user) => (
-                  <UserCard key={user!.id} user={user!} onEdit={onOpen} />
+                  <UserCard key={user!.id} user={user!} onEdit={onOpen} layout="card" />
                 ))}
-              </Table.Body>
-            </Table.Root>
-          </Box>
+              </Grid>
+            </Box>
+          ) : (
+            <Box
+              bg="white"
+              borderWidth="1px"
+              borderColor="gray.200"
+              rounded="xl"
+              shadow="xs"
+              overflow="hidden"
+            >
+              <Table.Root variant="line">
+                <Table.Header>
+                  <Table.Row>
+                    <Table.ColumnHeader>Name</Table.ColumnHeader>
+                    <Table.ColumnHeader>Email</Table.ColumnHeader>
+                    <Table.ColumnHeader>Phone</Table.ColumnHeader>
+                    <Table.ColumnHeader>Actions</Table.ColumnHeader>
+                  </Table.Row>
+                </Table.Header>
+                <Table.Body>
+                  {visibleUsers.map((user) => (
+                    <UserCard key={user!.id} user={user!} onEdit={onOpen} />
+                  ))}
+                </Table.Body>
+              </Table.Root>
+            </Box>
+          )}
+
           <Pagination
             currentPage={currentPage}
             totalItems={filteredUsers.length}

@@ -5,10 +5,12 @@ import {
   Table,
   Text,
   IconButton,
+  Button
 } from '@chakra-ui/react';
 import { useState } from 'react';
-import { LuStarOff, LuPencil, LuTrash2 } from 'react-icons/lu';
-import { FaStar } from 'react-icons/fa';
+// import { LuStarOff, LuPencil, LuTrash2 } from 'react-icons/lu';
+// import { FaStar } from 'react-icons/fa';
+import { LuBookmark, LuBookmarkCheck, LuPencil, LuTrash2 } from 'react-icons/lu';
 import { toaster } from '../../components/ui/toaster';
 import type { User } from '../../features/users/usersTypes';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
@@ -91,7 +93,8 @@ export default function UserCard({ user, onEdit, layout = 'table' }: Props) {
   };
 
   if (layout === 'card') {
-    return (
+  return (
+    <>
       <Box
         p={4}
         mb={3}
@@ -100,13 +103,16 @@ export default function UserCard({ user, onEdit, layout = 'table' }: Props) {
         rounded="lg"
         shadow="xs"
         bg="white"
+        w="100%"
       >
-        <Flex align="center" justify="space-between" mb={2} wrap="wrap" gap={2}>
+        {/* Top section */}
+        <Flex align="flex-start" justify="space-between" mb={3} gap={2}>
           <Flex align="center" gap={3}>
             <Avatar.Root size="sm">
               <Avatar.Fallback name={`${user.firstName} ${user.lastName}`} />
               {user.image ? <Avatar.Image src={user.image} /> : null}
             </Avatar.Root>
+
             <Box>
               <Text fontWeight="bold">
                 {user.firstName} {user.lastName}
@@ -119,37 +125,58 @@ export default function UserCard({ user, onEdit, layout = 'table' }: Props) {
               </Text>
             </Box>
           </Flex>
-          <Flex gap={2}>
-            <IconButton aria-label="Edit user" size="sm" variant="ghost" color="blue.500" onClick={handleEdit}>
-              <LuPencil />
-            </IconButton>
-            <IconButton aria-label="Delete user" size="sm" variant="ghost" color="red.500" onClick={handleDelete}>
-              <LuTrash2 />
-            </IconButton>
-            <IconButton
-              aria-label="Bookmark user"
-              size="sm"
-              variant="ghost"
-              onClick={handleBookmark}
-              color={bookmarked ? 'yellow.400' : 'gray.500'}
-            >
-              {bookmarked ? <FaStar /> : <LuStarOff />}
-            </IconButton>
-          </Flex>
+
+
+          <IconButton
+            aria-label="Bookmark user"
+            size="sm"
+            variant="ghost"
+            onClick={handleBookmark}
+            color={bookmarked ? '#967DFE' : 'gray.400'}
+            _hover={{
+              bg: bookmarked ? 'purple.50' : 'gray.100',
+              color: '#967DFE',
+            }}
+          >
+            {bookmarked ? <LuBookmarkCheck size={16} /> : <LuBookmark size={16} />}
+          </IconButton>
         </Flex>
 
-        <DeleteConfirmationDialog
-          isOpen={isDeleteDialogOpen}
-          onClose={handleCancelDelete}
-          onConfirm={handleConfirmDelete}
-          title="Delete User"
-          description={`Are you sure you want to delete ${user.firstName} ${user.lastName}? This action cannot be undone.`}
-          confirmText="Delete"
-          cancelText="Cancel"
-        />
+
+        <Box borderTop="1px solid" borderColor="gray.100" my={3} />
+
+        <Flex gap={3}>
+          <Button
+            flex={1}
+            variant="outline"
+            onClick={handleEdit}
+          >
+            Edit
+          </Button>
+
+          <Button
+            flex={1}
+            variant="outline"
+            colorPalette="red"
+            onClick={handleDelete}
+          >
+            Delete
+          </Button>
+        </Flex>
       </Box>
-    );
-  }
+
+      <DeleteConfirmationDialog
+        isOpen={isDeleteDialogOpen}
+        onClose={handleCancelDelete}
+        onConfirm={handleConfirmDelete}
+        title="Delete User"
+        description={`Are you sure you want to delete ${user.firstName} ${user.lastName}? This action cannot be undone.`}
+        confirmText="Delete"
+        cancelText="Cancel"
+      />
+    </>
+  );
+}
 
   return (
     <>
@@ -177,11 +204,11 @@ export default function UserCard({ user, onEdit, layout = 'table' }: Props) {
           aria-label="Edit user"
           size="sm"
           variant="ghost"
-          color="blue.500" // ✅ always blue
+          color="blue.500" 
           onClick={handleEdit}
           _hover={{
             bg: 'gray.100',
-            color: 'blue.600', // optional slightly darker on hover
+            color: 'blue.600', 
           }}
         >
           <LuPencil />
@@ -192,29 +219,28 @@ export default function UserCard({ user, onEdit, layout = 'table' }: Props) {
           aria-label="Delete user"
           size="sm"
           variant="ghost"
-          color="red.500" // ✅ always red
+          color="red.500" 
           onClick={handleDelete}
           _hover={{
             bg: 'red.50',
-            color: 'red.600', // optional darker on hover
+            color: 'red.600',
           }}
         >
           <LuTrash2 />
         </IconButton>
 
-        {/* Bookmark (unchanged) */}
         <IconButton
           aria-label="Bookmark user"
           size="sm"
           variant="ghost"
           onClick={handleBookmark}
-          color={bookmarked ? 'yellow.400' : 'gray.500'}
+          color={bookmarked ? 'yellow.400' : 'gray.400'}
           _hover={{
-            bg: bookmarked ? 'yellow.50' : 'gray.100',
-            color: 'yellow.500',
+            bg: bookmarked ? 'purple.50' : 'gray.100',
+            color: '#967DFE',
           }}
         >
-          {bookmarked ? <FaStar /> : <LuStarOff />}
+          {bookmarked ? <LuBookmarkCheck size={16} /> : <LuBookmark size={16} />}
         </IconButton>
 
       </Flex>

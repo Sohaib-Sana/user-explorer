@@ -1,4 +1,4 @@
-import { Button, Flex, Input } from '@chakra-ui/react';
+import { Box, Button, Flex, Input } from '@chakra-ui/react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { LuX, LuRefreshCw } from 'react-icons/lu';
 
@@ -57,19 +57,24 @@ export default function SearchField({
   }, []);
 
   return (
-    <Flex gap={3} width="100%">
+    <Flex gap={2} width="100%">
       <Input
         placeholder={placeholder}
         value={value}
         onChange={handleInputChange}
         flex={1}
+         focusRingColor={"#967DFE"}
+         h="36px"
       />
-      <Button
+     <Button
         onClick={handleClear}
         colorPalette="gray"
         variant="outline"
+        focusRingColor="#967DFE"
+        h="36px"
+        gap={2}
       >
-        {value ? <LuX /> : <LuRefreshCw />}
+        {value ?  <Box as={LuX} boxSize="14px" /> : <Box as={LuRefreshCw} boxSize="14px" />}
         {value ? 'Clear' : 'Refresh'}
       </Button>
     </Flex>

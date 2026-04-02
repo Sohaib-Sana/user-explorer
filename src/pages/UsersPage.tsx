@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Flex,
+  Grid,
   Heading,
   Spinner,
   Stack,
@@ -11,6 +12,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { useEffect } from 'react';
+import { useOutletContext } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { fetchUsers, searchUsers } from '../features/users/usersThunks';
 import { setSelectedUser } from '../features/users/usersSlice';
@@ -18,8 +20,11 @@ import Pagination from '../components/common/Pagination';
 import UserCard from '../components/users/UserCard';
 import UserFormDrawer from '../components/users/UserFormDrawer';
 import SearchField from '../components/common/SearchField';
+import type { ViewMode } from '../components/common/AppShell';
 
 export default function UsersPage() {
+  const { viewMode } = useOutletContext<{ viewMode: ViewMode }>();
+
   const dispatch = useAppDispatch();
   const { items, total, limit, skip, query, fetchStatus, error } = useAppSelector(
     (state) => state.users
@@ -67,14 +72,16 @@ export default function UsersPage() {
   const showEmptyState = !isLoading && fetchStatus === 'succeeded' && items.length === 0;
   const showList = items.length > 0;
 
+  const shouldShowGrid = viewMode === 'grid';
+
   return (
     <Box>
-      <Flex justify="space-between" align="center" mb={6} wrap="wrap" gap={3}>
+      <Flex justify="space-between" align="center" mb={4} wrap="wrap" gap={2}>
         <Heading size="lg" color="black">
           Users
         </Heading>
-        <Button colorPalette="brand" onClick={handleAdd} backgroundColor={'#967DFE'}>
-         + Add User
+        <Button colorPalette="brand" onClick={handleAdd} backgroundColor={'#967DFE'}  h="35px">
+          + Add User
         </Button>
       </Flex>
 
@@ -102,7 +109,23 @@ export default function UsersPage() {
       {showList && (
         <Box position="relative">
           <Box opacity={isLoading ? 0.6 : 1} transition="opacity 0.2s ease">
-            {isMobile ? (
+            {shouldShowGrid ? (
+              <Box minH="420px" w="100%" overflowX="hidden">
+                <Grid
+                  templateColumns={{
+                    base: '1fr',
+                    md: 'repeat(2, 1fr)',
+                    xl: 'repeat(3, 1fr)',
+                  }}
+                  gap={{ base: 4, md: 5 }}
+                  w="100%"
+                >
+                  {items.map((user) => (
+                    <UserCard key={user.id} user={user} onEdit={onOpen} layout="card" />
+                  ))}
+                </Grid>
+              </Box>
+            ) : isMobile ? (
               <Box minH="420px">
                 <Stack gap={3}>
                   {items.map((user) => (
