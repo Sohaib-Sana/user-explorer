@@ -77,6 +77,7 @@ const bookmarksSlice = createSlice({
       state.ids = [];
     },
   },
+
   extraReducers: (builder) => {
     builder
       .addCase(loginSuccess, (state, action) => {

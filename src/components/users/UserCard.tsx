@@ -5,14 +5,16 @@ import {
   Text,
   IconButton,
 } from '@chakra-ui/react';
-import {  LuStarOff, LuPencil, LuTrash2 } from 'react-icons/lu';
-import { FaStar } from 'react-icons/fa'; //
+import { useState } from 'react';
+import { LuStarOff, LuPencil, LuTrash2 } from 'react-icons/lu';
+import { FaStar } from 'react-icons/fa';
 import { toaster } from '../../components/ui/toaster';
 import type { User } from '../../features/users/usersTypes';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { setSelectedUser } from '../../features/users/usersSlice';
 import { deleteUser } from '../../features/users/usersThunks';
 import { toggleBookmark } from '../../features/bookmarks/bookmarksSlice';
+import DeleteConfirmationDialog from '../common/DeleteConfirmationDialog';
 
 interface Props {
   user: User;
@@ -21,6 +23,7 @@ interface Props {
 
 export default function UserCard({ user, onEdit }: Props) {
   const dispatch = useAppDispatch();
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const { isAuthenticated, user: authUser } = useAppSelector((state) => state.auth);
   const bookmarked = useAppSelector((state) => state.bookmarks.ids.includes(user.id));
@@ -30,10 +33,17 @@ export default function UserCard({ user, onEdit }: Props) {
     onEdit();
   };
 
-  const handleDelete = async () => {
-    const confirmed = window.confirm(`Delete ${user.firstName} ${user.lastName}?`);
-    if (!confirmed) return;
+  const handleDelete = () => {
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    setIsDeleteDialogOpen(false);
     await dispatch(deleteUser(user.id));
+  };
+
+  const handleCancelDelete = () => {
+    setIsDeleteDialogOpen(false);
   };
 
   const handleBookmark = () => {
@@ -56,12 +66,13 @@ export default function UserCard({ user, onEdit }: Props) {
   };
 
   return (
-    <Table.Row>
+    <>
+      <Table.Row>
       <Table.Cell>
         <Flex align="center" gap={3}>
           <Avatar.Root size="sm">
             <Avatar.Fallback name={`${user.firstName} ${user.lastName}`} />
-            <Avatar.Image src={user.image} />
+            {user.image ? <Avatar.Image src={user.image} /> : null}
           </Avatar.Root>
           <Text fontWeight="medium">
             {user.firstName} {user.lastName}
@@ -123,5 +134,16 @@ export default function UserCard({ user, onEdit }: Props) {
       </Flex>
     </Table.Cell>
     </Table.Row>
+
+    <DeleteConfirmationDialog
+      isOpen={isDeleteDialogOpen}
+      onClose={handleCancelDelete}
+      onConfirm={handleConfirmDelete}
+      title="Delete User"
+      description={`Are you sure you want to delete ${user.firstName} ${user.lastName}? This action cannot be undone.`}
+      confirmText="Delete"
+      cancelText="Cancel"
+    />
+    </>
   );
 }

@@ -57,7 +57,7 @@ export default function AppShell() {
             colorPalette={isBookmarksPage ? 'yellow' : 'gray'}
             variant={isBookmarksPage ? 'solid' : 'outline'}
           >
-            <Link to="/bookmarks">Bookmarks</Link>
+            {isAuthenticated ? <Link to="/bookmarks">Bookmarks</Link> : <Link to="/login">Login</Link>}
           </Button>
 
           {isAuthenticated && (

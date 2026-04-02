@@ -119,7 +119,19 @@ const usersSlice = createSlice({
       })
       .addCase(addUser.fulfilled, (state, action) => {
         state.addStatus = 'succeeded';
-        state.items = [action.payload, ...state.items];
+
+        const existingIds = new Set(state.items.map((user) => user.id));
+        let incomingUser = action.payload;
+
+        if (existingIds.has(incomingUser.id)) {
+          const maxId = Math.max(...state.items.map((user) => user.id), incomingUser.id);
+          incomingUser = {
+            ...incomingUser,
+            id: maxId + 1,
+          };
+        }
+
+        state.items = [incomingUser, ...state.items];
       })
       .addCase(addUser.rejected, (state, action) => {
         state.addStatus = 'failed';
