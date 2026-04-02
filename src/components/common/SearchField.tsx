@@ -1,6 +1,6 @@
 import { Button, Flex, Input } from '@chakra-ui/react';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { LuX } from 'react-icons/lu';
+import { LuX, LuRefreshCw } from 'react-icons/lu';
 
 interface SearchFieldProps {
   placeholder?: string;
@@ -18,18 +18,16 @@ export default function SearchField({
   const [value, setValue] = useState('');
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Debounced search handler
+
   const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const newValue = e.target.value;
       setValue(newValue);
 
-      // Clear existing timer
       if (debounceTimerRef.current) {
         clearTimeout(debounceTimerRef.current);
       }
 
-      // Set new timer for debounced search
       debounceTimerRef.current = setTimeout(() => {
         if (newValue.trim()) {
           onSearch(newValue.trim());
@@ -70,10 +68,9 @@ export default function SearchField({
         onClick={handleClear}
         colorPalette="gray"
         variant="outline"
-        disabled={!value}
       >
-        <LuX />
-        Clear
+        {value ? <LuX /> : <LuRefreshCw />}
+        {value ? 'Clear' : 'Refresh'}
       </Button>
     </Flex>
   );
