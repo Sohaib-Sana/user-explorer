@@ -4,8 +4,10 @@ import {
   Flex,
   Heading,
   Spinner,
+  Stack,
   Table,
   Text,
+  useBreakpointValue,
   useDisclosure,
 } from '@chakra-ui/react';
 import { useEffect } from 'react';
@@ -19,6 +21,7 @@ import SearchField from '../components/common/SearchField';
 export default function UsersPage() {
   const dispatch = useAppDispatch();
   const { items, fetchStatus, error } = useAppSelector((state) => state.users);
+  const isMobile = useBreakpointValue({ base: true, md: false });
   const { open, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
@@ -76,29 +79,44 @@ export default function UsersPage() {
       )}
 
       {fetchStatus === 'succeeded' && items.length > 0 && (
-       <Box
-          bg="white"
-          borderWidth="1px"
-          borderColor="gray.200"
-          rounded="xl"
-          shadow="xs"
-          overflow="hidden"
-        >
-          <Table.Root variant="line">
-            <Table.Header>
-              <Table.Row>
-                <Table.ColumnHeader>Name</Table.ColumnHeader>
-                <Table.ColumnHeader>Email</Table.ColumnHeader>
-                <Table.ColumnHeader>Phone</Table.ColumnHeader>
-                <Table.ColumnHeader>Actions</Table.ColumnHeader>
-              </Table.Row>
-            </Table.Header>
-            <Table.Body>
+        <Box>
+          {isMobile ? (
+            <Stack gap={3}>
               {items.map((user) => (
-                <UserCard key={user.id} user={user} onEdit={onOpen} />
+                <UserCard key={user.id} user={user} onEdit={onOpen} layout="card" />
               ))}
-            </Table.Body>
-          </Table.Root>
+            </Stack>
+          ) : (
+            <Box
+              bg="white"
+              borderWidth="1px"
+              borderColor="gray.200"
+              rounded="xl"
+              shadow="xs"
+              overflowX="auto"
+            >
+              <Table.Root variant="line">
+                <Table.Header>
+                  <Table.Row>
+                    <Table.ColumnHeader>Name</Table.ColumnHeader>
+                    <Table.ColumnHeader>Email</Table.ColumnHeader>
+                    <Table.ColumnHeader>Phone</Table.ColumnHeader>
+                    <Table.ColumnHeader>Actions</Table.ColumnHeader>
+                  </Table.Row>
+                </Table.Header>
+                <Table.Body>
+                  {items.map((user) => (
+                    <UserCard
+                      key={user.id}
+                      user={user}
+                      onEdit={onOpen}
+                      layout="table"
+                    />
+                  ))}
+                </Table.Body>
+              </Table.Root>
+            </Box>
+          )}
         </Box>
       )}
 

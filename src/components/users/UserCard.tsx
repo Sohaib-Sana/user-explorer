@@ -1,6 +1,7 @@
 import {
   Avatar,
   Flex,
+  Box,
   Table,
   Text,
   IconButton,
@@ -19,9 +20,10 @@ import DeleteConfirmationDialog from '../common/DeleteConfirmationDialog';
 interface Props {
   user: User;
   onEdit: () => void;
+  layout?: 'table' | 'card';
 }
 
-export default function UserCard({ user, onEdit }: Props) {
+export default function UserCard({ user, onEdit, layout = 'table' }: Props) {
   const dispatch = useAppDispatch();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
@@ -87,6 +89,67 @@ export default function UserCard({ user, onEdit }: Props) {
       meta: { closable: true },
     });
   };
+
+  if (layout === 'card') {
+    return (
+      <Box
+        p={4}
+        mb={3}
+        borderWidth="1px"
+        borderColor="gray.200"
+        rounded="lg"
+        shadow="xs"
+        bg="white"
+      >
+        <Flex align="center" justify="space-between" mb={2} wrap="wrap" gap={2}>
+          <Flex align="center" gap={3}>
+            <Avatar.Root size="sm">
+              <Avatar.Fallback name={`${user.firstName} ${user.lastName}`} />
+              {user.image ? <Avatar.Image src={user.image} /> : null}
+            </Avatar.Root>
+            <Box>
+              <Text fontWeight="bold">
+                {user.firstName} {user.lastName}
+              </Text>
+              <Text fontSize="sm" color="gray.600">
+                {user.email}
+              </Text>
+              <Text fontSize="sm" color="gray.600">
+                {user.phone || 'No phone'}
+              </Text>
+            </Box>
+          </Flex>
+          <Flex gap={2}>
+            <IconButton aria-label="Edit user" size="sm" variant="ghost" color="blue.500" onClick={handleEdit}>
+              <LuPencil />
+            </IconButton>
+            <IconButton aria-label="Delete user" size="sm" variant="ghost" color="red.500" onClick={handleDelete}>
+              <LuTrash2 />
+            </IconButton>
+            <IconButton
+              aria-label="Bookmark user"
+              size="sm"
+              variant="ghost"
+              onClick={handleBookmark}
+              color={bookmarked ? 'yellow.400' : 'gray.500'}
+            >
+              {bookmarked ? <FaStar /> : <LuStarOff />}
+            </IconButton>
+          </Flex>
+        </Flex>
+
+        <DeleteConfirmationDialog
+          isOpen={isDeleteDialogOpen}
+          onClose={handleCancelDelete}
+          onConfirm={handleConfirmDelete}
+          title="Delete User"
+          description={`Are you sure you want to delete ${user.firstName} ${user.lastName}? This action cannot be undone.`}
+          confirmText="Delete"
+          cancelText="Cancel"
+        />
+      </Box>
+    );
+  }
 
   return (
     <>
