@@ -3,7 +3,7 @@
 import { createToaster, Portal, Spinner, Stack, Toast, Toaster } from "@chakra-ui/react"
 
 export const toaster = createToaster({
-  placement: "top-end",
+  placement: "bottom-end",
   pauseOnPageIdle: true,
 })
 
@@ -12,7 +12,15 @@ export const AppToaster = () => {
     <Portal>
       <Toaster toaster={toaster}>
         {(toast) => (
-          <Toast.Root width={{ md: "sm" }}>
+          <Toast.Root
+            width={{ base: "90vw", md: "320px" }}
+            minH="48px"
+            p={2}
+            borderRadius="md"
+            boxShadow="lg"
+            borderWidth="1px"
+            borderColor="gray.200"
+          >
             {toast.type === "loading" ? (
               <Spinner size="sm" color="blue.solid" />
             ) : (

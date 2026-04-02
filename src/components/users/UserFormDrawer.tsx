@@ -1,10 +1,9 @@
 import {
   Button,
   CloseButton,
-  Drawer,
+  Dialog,
   Field,
   Input,
-  Portal,
   VStack,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
@@ -82,24 +81,24 @@ export default function UserFormDrawer({ isOpen, onClose }: Props) {
   };
 
   return (
-    <Drawer.Root
-      open={isOpen}
-      onOpenChange={(details) => {
-        if (!details.open) onClose();
-      }}
-      placement="end"
-      size="md"
-    >
-      <Portal>
-        <Drawer.Backdrop />
-        <Drawer.Positioner>
-          <Drawer.Content>
-            <form onSubmit={handleSubmit}>
-              <Drawer.Header>
-                {isEditing ? 'Update User' : 'Add User'}
-              </Drawer.Header>
-
-              <Drawer.Body>
+    <Dialog.Root open={isOpen} onOpenChange={(details) => !details.open && onClose()}>
+      <Dialog.Backdrop />
+      <Dialog.Content
+        position="fixed"
+        top="50%"
+        left="50%"
+        transform="translate(-50%, -50%)"
+        maxW="md"
+        w="full"
+        p={4}
+        borderRadius="lg"
+        bg="white"
+      >
+        <form onSubmit={handleSubmit}>
+          <Dialog.Header>
+            <Dialog.Title color="black">{isEditing ? 'Update User' : 'Add User'}</Dialog.Title>
+          </Dialog.Header>
+          <Dialog.Body>
                 <VStack gap={4} align="stretch">
                   <Field.Root required>
                     <Field.Label>First Name</Field.Label>
@@ -134,24 +133,20 @@ export default function UserFormDrawer({ isOpen, onClose }: Props) {
                     />
                   </Field.Root>
                 </VStack>
-              </Drawer.Body>
-
-              <Drawer.Footer>
+              </Dialog.Body>
+              <Dialog.Footer>
                 <Button mr={3} variant="outline" onClick={onClose}>
                   Cancel
                 </Button>
                 <Button type="submit" colorPalette="blue" loading={loading}>
                   {isEditing ? 'Update' : 'Add'}
                 </Button>
-              </Drawer.Footer>
+              </Dialog.Footer>
             </form>
-
-            <Drawer.CloseTrigger asChild>
-              <CloseButton size="sm" />
-            </Drawer.CloseTrigger>
-          </Drawer.Content>
-        </Drawer.Positioner>
-      </Portal>
-    </Drawer.Root>
+            <Dialog.CloseTrigger asChild>
+              <CloseButton size="sm" position="absolute" top={3} right={3} />
+            </Dialog.CloseTrigger>
+          </Dialog.Content>
+        </Dialog.Root>
   );
 }
