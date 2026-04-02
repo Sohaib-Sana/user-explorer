@@ -44,8 +44,8 @@ export default function UserCard({ user, onEdit, layout = 'table' }: Props) {
     try {
       await dispatch(deleteUser(user.id)).unwrap();
       toaster.create({
-        title: 'User deleted',
-        description: `The user "${user.firstName} ${user.lastName}" was deleted.`,
+        // title: 'User deleted',
+        description: `User deleted successfully.`,
         type: 'success',
         meta: { closable: true },
       });
@@ -83,7 +83,7 @@ export default function UserCard({ user, onEdit, layout = 'table' }: Props) {
 
     const actionLabel = bookmarked ? 'Removed bookmark for' : 'Bookmarked';
     toaster.create({
-      title: 'Bookmark updated',
+      // title: 'Bookmark updated',
       description: `${actionLabel} user "${user.firstName} ${user.lastName}".`,
       type: 'success',
       meta: { closable: true },

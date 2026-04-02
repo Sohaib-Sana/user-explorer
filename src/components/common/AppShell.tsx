@@ -24,6 +24,7 @@ export default function AppShell() {
     location.pathname === '/bookmarks' || location.pathname === '/login';
 
   return (
+    <div className="app-container">
     <Box minH="100vh" w="100%" bg="white">
       <Flex
         px={{ base: 4, md: 8 }}
@@ -37,7 +38,59 @@ export default function AppShell() {
         zIndex={10}
         w="100%"
       >
-        <Heading size="md" color="black">
+        {isAuthenticated && (
+          <Menu.Root positioning={{ placement: 'bottom-end' }}>
+            <Menu.Trigger asChild>
+              <Button
+                variant="ghost"
+                p={0}
+                minW="auto"
+                h="auto"
+                rounded="full"
+              >
+                <Avatar.Root size="md"
+                background={'#967DFE'}
+                color={'white'}
+                >
+                  <Avatar.Fallback
+                    name={user?.email || 'User'}
+                    fontSize="lg"
+                  />
+                </Avatar.Root>
+              </Button>
+            </Menu.Trigger>
+
+            <Portal>
+              <Menu.Positioner>
+                <Menu.Content minW="220px">
+                  <Box px={3} py={2}>
+                    <Text fontSize="sm" color="gray.500">
+                      Signed in as
+                    </Text>
+                    <Text fontSize="sm" fontWeight="medium" color="black">
+                      {user?.email || 'No email'}
+                    </Text>
+                  </Box>
+
+                  <Menu.Separator />
+
+                  <Menu.Item
+                    value="logout"
+                    color="red.500"
+                    onClick={() => {
+                      dispatch(logout());
+                      navigate('/login');
+                    }}
+                  >
+                    Logout
+                  </Menu.Item>
+                </Menu.Content>
+              </Menu.Positioner>
+            </Portal>
+          </Menu.Root>
+        )}
+
+        <Heading size="sm" color="black" ml={3} alignSelf="flex-end">
           User Explorer
         </Heading>
 
@@ -46,65 +99,27 @@ export default function AppShell() {
         <Flex gap={3} align="center">
           <Button
             asChild
-            colorPalette={isUsersPage ? 'blue' : 'gray'}
             variant={isUsersPage ? 'solid' : 'outline'}
-          >
-            <Link to="/users">Users</Link>
+            size="sm"
+            py={1}
+            backgroundColor={isUsersPage ? '#967DFE' : 'transparent'}
+            >
+            <Link to="/users"  >Users</Link>
           </Button>
 
           <Button
             asChild
-            colorPalette={isBookmarksPage ? 'yellow' : 'gray'}
             variant={isBookmarksPage ? 'solid' : 'outline'}
+            size="sm"
+            py={1}
+            backgroundColor={isBookmarksPage ? '#967DFE' : 'transparent'}
           >
-            {isAuthenticated ? <Link to="/bookmarks">Bookmarks</Link> : <Link to="/login">Login</Link>}
+            {isAuthenticated ? (
+              <Link to="/bookmarks">Bookmarks</Link>
+            ) : (
+              <Link to="/login">Login</Link>
+            )}
           </Button>
-
-          {isAuthenticated && (
-            <Menu.Root positioning={{ placement: 'bottom-end' }}>
-              <Menu.Trigger asChild>
-                <Button
-                  variant="ghost"
-                  p={0}
-                  minW="auto"
-                  h="auto"
-                  rounded="full"
-                >
-                  <Avatar.Root size="sm">
-                    <Avatar.Fallback name={user?.email || 'User'} />
-                  </Avatar.Root>
-                </Button>
-              </Menu.Trigger>
-
-              <Portal>
-                <Menu.Positioner>
-                  <Menu.Content minW="220px">
-                    <Box px={3} py={2}>
-                      <Text fontSize="sm" color="gray.500">
-                        Signed in as
-                      </Text>
-                      <Text fontSize="sm" fontWeight="medium" color="black">
-                        {user?.email || 'No email'}
-                      </Text>
-                    </Box>
-
-                    <Menu.Separator />
-
-                    <Menu.Item
-                      value="logout"
-                      color="red.500"
-                      onClick={() => {
-                        dispatch(logout());
-                        navigate('/login');
-                      }}
-                    >
-                      Logout
-                    </Menu.Item>
-                  </Menu.Content>
-                </Menu.Positioner>
-              </Portal>
-            </Menu.Root>
-          ) }
         </Flex>
       </Flex>
 
@@ -130,5 +145,6 @@ export default function AppShell() {
         </Box>
       </Box>
     </Box>
+        </div>
   );
 }

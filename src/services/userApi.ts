@@ -12,13 +12,20 @@ export const usersApi = {
     return data;
   },
 
-  searchUsers: async (query: string): Promise<UsersResponse> => {
-    const { data } = await api.get(`/users/search?q=${encodeURIComponent(query)}`);
-    return data;
-  },
+ searchUsers: async (
+  query: string,
+  limit = 12,
+  skip = 0
+): Promise<UsersResponse> => {
+  const { data } = await api.get(
+    `/users/search?q=${encodeURIComponent(query)}&limit=${limit}&skip=${skip}`
+  );
+  return data;
+},
 
   addUser: async (payload: UserPayload): Promise<User> => {
     const { data } = await api.post('/users/add', payload);
+    console.log('Data: ',data)
     return data;
   },
 

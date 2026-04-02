@@ -53,15 +53,16 @@ export default function UserFormDrawer({ isOpen, onClose }: Props) {
       if (isEditing && selectedUser) {
         await dispatch(updateUser({ id: selectedUser.id, payload })).unwrap();
         toaster.create({
-          title: 'User updated',
-          description: `Updated the user "${payload.firstName} ${payload.lastName}".`,
+          // title: 'User updated',
+          // description: `Updated the user "${payload.firstName} ${payload.lastName}".`,
+          description: `User updated successfully.`,
           type: 'success',
           meta: { closable: true },
         });
       } else {
         await dispatch(addUser(payload)).unwrap();
         toaster.create({
-          title: 'User added',
+          // title: 'User added',
           description: `Created a new user "${payload.firstName} ${payload.lastName}".`,
           type: 'success',
           meta: { closable: true },
@@ -135,10 +136,10 @@ export default function UserFormDrawer({ isOpen, onClose }: Props) {
                 </VStack>
               </Dialog.Body>
               <Dialog.Footer>
-                <Button mr={3} variant="outline" onClick={onClose}>
+                <Button mr={2} variant="outline" onClick={onClose}>
                   Cancel
                 </Button>
-                <Button type="submit" colorPalette="blue" loading={loading}>
+                <Button type="submit" backgroundColor="#967DFE" loading={loading}>
                   {isEditing ? 'Update' : 'Add'}
                 </Button>
               </Dialog.Footer>

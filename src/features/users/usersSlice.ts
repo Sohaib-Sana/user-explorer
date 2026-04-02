@@ -81,7 +81,8 @@ const usersSlice = createSlice({
         state.items = action.payload.users;
         state.total = action.payload.total;
         state.skip = action.payload.skip;
-        state.limit = action.payload.limit;
+        state.limit = action.meta.arg.limit ?? state.limit;
+        state.query = '';
       })
       .addCase(fetchUsers.rejected, (state, action) => {
         state.fetchStatus = 'failed';
@@ -107,7 +108,8 @@ const usersSlice = createSlice({
         state.items = action.payload.users;
         state.total = action.payload.total;
         state.skip = action.payload.skip;
-        state.limit = action.payload.limit;
+        state.limit = action.meta.arg.limit ?? state.limit;
+        state.query = action.meta.arg.query;
       })
       .addCase(searchUsers.rejected, (state, action) => {
         state.fetchStatus = 'failed';
@@ -132,6 +134,7 @@ const usersSlice = createSlice({
         }
 
         state.items = [incomingUser, ...state.items];
+        state.total += 1;
       })
       .addCase(addUser.rejected, (state, action) => {
         state.addStatus = 'failed';
@@ -158,6 +161,7 @@ const usersSlice = createSlice({
       .addCase(deleteUser.fulfilled, (state, action) => {
         state.deleteStatus = 'succeeded';
         state.items = state.items.filter((user) => user.id !== action.payload);
+        state.total = Math.max(0, state.total - 1);
       })
       .addCase(deleteUser.rejected, (state, action) => {
         state.deleteStatus = 'failed';

@@ -19,8 +19,16 @@ export const fetchUsersByIds = createAsyncThunk(
 
 export const searchUsers = createAsyncThunk(
   'users/searchUsers',
-  async (query: string) => {
-    return usersApi.searchUsers(query);
+  async ({
+    query,
+    limit = 12,
+    skip = 0,
+  }: {
+    query: string;
+    limit?: number;
+    skip?: number;
+  }) => {
+    return usersApi.searchUsers(query, limit, skip);
   }
 );
 

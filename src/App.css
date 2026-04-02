@@ -31,6 +31,13 @@ body {
   color: #111827;
 }
 
+.app-container {
+  max-width: 1200px;   
+  margin: 0 auto;      
+  padding: 0 24px;     
+  background: #ffffff;
+}
+
 a {
   color: inherit;
   text-decoration: none;

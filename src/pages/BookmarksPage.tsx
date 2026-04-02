@@ -6,7 +6,7 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { setSelectedUser } from '../features/users/usersSlice';
@@ -14,11 +14,14 @@ import { fetchUsersByIds } from '../features/users/usersThunks';
 import UserCard from '../components/users/UserCard';
 import UserFormDrawer from '../components/users/UserFormDrawer';
 import SearchField from '../components/common/SearchField';
+import Pagination from '../components/common/Pagination';
 
 export default function BookmarksPage() {
   const dispatch = useAppDispatch();
   const { open, onOpen, onClose } = useDisclosure();
   const [searchQuery, setSearchQuery] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 12;
 
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
   const ids = useAppSelector((state) => state.bookmarks.ids);
@@ -49,12 +52,27 @@ export default function BookmarksPage() {
       )
     : bookmarkedUsers;
 
+  const totalPages = Math.max(1, Math.ceil(filteredUsers.length / pageSize));
+
+  const visibleUsers = useMemo(() => {
+    const start = (currentPage - 1) * pageSize;
+    return filteredUsers.slice(start, start + pageSize) as NonNullable<typeof bookmarkedUsers>[0][];
+  }, [filteredUsers, currentPage]);
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
+
   const handleSearch = (query: string) => {
     setSearchQuery(query);
+    setCurrentPage(1);
   };
 
   const handleClear = () => {
     setSearchQuery('');
+    setCurrentPage(1);
   };
 
   const handleDrawerClose = () => {
@@ -82,30 +100,38 @@ export default function BookmarksPage() {
       ) : filteredUsers.length === 0 ? (
         <Text>No users match your search.</Text>
       ) : (
-        <Box
-          bg="white"
-          borderWidth="1px"
-          borderColor="gray.200"
-          rounded="xl"
-          shadow="xs"
-          overflow="hidden"
-        >
-          <Table.Root variant="line">
-            <Table.Header>
-              <Table.Row>
-                <Table.ColumnHeader>Name</Table.ColumnHeader>
-                <Table.ColumnHeader>Email</Table.ColumnHeader>
-                <Table.ColumnHeader>Phone</Table.ColumnHeader>
-                <Table.ColumnHeader>Actions</Table.ColumnHeader>
-              </Table.Row>
-            </Table.Header>
-            <Table.Body>
-              {filteredUsers.map((user) => (
-                <UserCard key={user!.id} user={user!} onEdit={onOpen} />
-              ))}
-            </Table.Body>
-          </Table.Root>
-        </Box>
+        <>
+          <Box
+            bg="white"
+            borderWidth="1px"
+            borderColor="gray.200"
+            rounded="xl"
+            shadow="xs"
+            overflow="hidden"
+          >
+            <Table.Root variant="line">
+              <Table.Header>
+                <Table.Row>
+                  <Table.ColumnHeader>Name</Table.ColumnHeader>
+                  <Table.ColumnHeader>Email</Table.ColumnHeader>
+                  <Table.ColumnHeader>Phone</Table.ColumnHeader>
+                  <Table.ColumnHeader>Actions</Table.ColumnHeader>
+                </Table.Row>
+              </Table.Header>
+              <Table.Body>
+                {visibleUsers.map((user) => (
+                  <UserCard key={user!.id} user={user!} onEdit={onOpen} />
+                ))}
+              </Table.Body>
+            </Table.Root>
+          </Box>
+          <Pagination
+            currentPage={currentPage}
+            totalItems={filteredUsers.length}
+            pageSize={pageSize}
+            onPageChange={setCurrentPage}
+          />
+        </>
       )}
 
       <UserFormDrawer isOpen={open} onClose={handleDrawerClose} />
