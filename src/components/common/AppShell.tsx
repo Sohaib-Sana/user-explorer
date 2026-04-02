@@ -118,10 +118,11 @@ export default function AppShell() {
           >
             {showViewToggle && (
               <Flex
+                display={{ base: 'none', md: 'flex' }}
                 p="3px"
                 rounded="full"
                 bg="linear-gradient(90deg, #54b740 0%, #63c94e 100%)"
-                w={{ base: '220px', sm: '240px' }}
+                w="240px"
               >
                 <Button
                   flex={1}
@@ -134,12 +135,8 @@ export default function AppShell() {
                   bg={viewMode === 'list' ? 'white' : 'transparent'}
                   color={viewMode === 'list' ? '#54b740' : 'white'}
                   fontWeight="semibold"
-                  _hover={{
-                    bg: viewMode === 'list' ? 'white' : 'transparent',
-                  }}
-                  _active={{
-                    bg: viewMode === 'list' ? 'white' : 'transparent',
-                  }}
+                  _hover={{ bg: viewMode === 'list' ? 'white' : 'transparent' }}
+                  _active={{ bg: viewMode === 'list' ? 'white' : 'transparent' }}
                 >
                   List view
                 </Button>
@@ -155,12 +152,8 @@ export default function AppShell() {
                   bg={viewMode === 'grid' ? 'white' : 'transparent'}
                   color={viewMode === 'grid' ? '#54b740' : 'white'}
                   fontWeight="semibold"
-                  _hover={{
-                    bg: viewMode === 'grid' ? 'white' : 'transparent',
-                  }}
-                  _active={{
-                    bg: viewMode === 'grid' ? 'white' : 'transparent',
-                  }}
+                  _hover={{ bg: viewMode === 'grid' ? 'white' : 'transparent' }}
+                  _active={{ bg: viewMode === 'grid' ? 'white' : 'transparent' }}
                 >
                   Grid view
                 </Button>

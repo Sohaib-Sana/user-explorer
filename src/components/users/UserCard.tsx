@@ -93,98 +93,114 @@ export default function UserCard({ user, onEdit, layout = 'table' }: Props) {
   };
 
   if (layout === 'card') {
-      return (
-        <>
-          <Box
-            p={4}
-            mb={3}
-            borderWidth="1px"
-            borderColor="gray.200"
-            rounded="lg"
-            shadow="xs"
-            bg="white"
-            w="100%"
-          >
-            <Flex align="flex-start" justify="space-between" mb={3} gap={2}>
-              <Flex align="center" gap={3}>
-                <Avatar.Root size="sm">
-                  <Avatar.Fallback name={`${user.firstName} ${user.lastName}`} />
-                  {user.image ? <Avatar.Image src={user.image} /> : null}
-                </Avatar.Root>
+  return (
+    <>
+      <Box
+        p={4}
+        mb={3}
+        borderWidth="1px"
+        borderColor="gray.200"
+        rounded="lg"
+        shadow="xs"
+        bg="white"
+        w="100%"
+      >
+        <Flex
+          align="flex-start"
+          justify="space-between"
+          mb={3}
+          gap={3}
+        >
+          <Flex align="center" gap={3} flex={1} minW={0}>
+            <Avatar.Root size="sm" flexShrink={0}>
+              <Avatar.Fallback name={`${user.firstName} ${user.lastName}`} />
+              {user.image ? <Avatar.Image src={user.image} /> : null}
+            </Avatar.Root>
 
-               <Box textAlign="left">
-                <Text color="black" fontWeight="medium">
-                  {/* <Text as="span" fontWeight="bold">Name: </Text> */}
-                  {user.firstName} {user.lastName}
-                </Text>
+            <Box flex={1} minW={0} textAlign="left">
+              <Text color="black" fontWeight="medium" lineClamp={1}>
+                {user.firstName} {user.lastName}
+              </Text>
 
-               <Text fontSize="sm" color="gray.600">
-                  {/* <Text as="span" fontWeight="bold">Email: </Text> */}
-                  {user.email}
-                </Text>
-
-                <Text fontSize="sm" color="gray.600">
-                  {/* <Text as="span" fontWeight="bold">Phone: </Text> */}
-                  {user.phone || 'No phone'}
-                </Text>
-              </Box>
-            </Flex>
-
-
-              <IconButton
-                aria-label="Bookmark user"
-                size="sm"
-                variant="ghost"
-                onClick={handleBookmark}
-                color={bookmarked ? 'yellow.400' : 'gray.400'}
-                _hover={{
-                  bg: bookmarked ? 'purple.50' : 'gray.100',
-                  color: '#63c94e',
-                }}
+              <Text
+                fontSize="sm"
+                color="gray.600"
+                lineClamp={1}
+                overflow="hidden"
+                textOverflow="ellipsis"
+                whiteSpace="nowrap"
               >
-                {bookmarked ? <LuBookmarkCheck size={16} /> : <LuBookmark size={16} />}
-              </IconButton>
-            </Flex>
+                {user.email}
+              </Text>
 
-
-            <Box borderTop="1px solid" borderColor="gray.100" my={3} />
-
-          <Flex gap={4} justify="center" wrap="wrap">
-            <Button
-              variant="outline"
-              onClick={handleEdit}
-              h="35px"
-              minW="100px"
-              px={4}
-            >
-              Edit
-            </Button>
-
-            <Button
-              variant="outline"
-              colorPalette="red"
-              onClick={handleDelete}
-              h="35px"
-              minW="100px"
-              px={4}
-            >
-              Delete
-            </Button>
+              <Text
+                fontSize="sm"
+                color="gray.600"
+                lineClamp={1}
+                overflow="hidden"
+                textOverflow="ellipsis"
+                whiteSpace="nowrap"
+              >
+                {user.phone || 'No phone'}
+              </Text>
+            </Box>
           </Flex>
-          </Box>
 
-          <DeleteConfirmationDialog
-            isOpen={isDeleteDialogOpen}
-            onClose={handleCancelDelete}
-            onConfirm={handleConfirmDelete}
-            title="Delete User"
-            description={`Are you sure you want to delete ${user.firstName} ${user.lastName}? This action cannot be undone.`}
-            confirmText="Delete"
-            cancelText="Cancel"
-          />
-        </>
-      );
-    }
+          <IconButton
+            aria-label="Bookmark user"
+            size="sm"
+            variant="ghost"
+            flexShrink={0}
+            alignSelf="flex-start"
+            onClick={handleBookmark}
+            color={bookmarked ? 'yellow.400' : 'gray.400'}
+            _hover={{
+              bg: bookmarked ? 'purple.50' : 'gray.100',
+              color: '#63c94e',
+            }}
+          >
+            {bookmarked ? <LuBookmarkCheck size={16} /> : <LuBookmark size={16} />}
+          </IconButton>
+        </Flex>
+
+        <Box borderTop="1px solid" borderColor="gray.100" my={3} />
+
+        <Flex gap={3} justify="center" wrap="nowrap">
+          <Button
+            variant="outline"
+            onClick={handleEdit}
+            h="35px"
+            flex={1}
+            minW="0"
+          >
+            Edit
+          </Button>
+
+          <Button
+            variant="outline"
+            colorPalette="red"
+            onClick={handleDelete}
+            h="35px"
+            flex={1}
+            minW="0"
+          >
+            Delete
+          </Button>
+        </Flex>
+      </Box>
+
+      <DeleteConfirmationDialog
+        isOpen={isDeleteDialogOpen}
+        onClose={handleCancelDelete}
+        onConfirm={handleConfirmDelete}
+        title="Delete User"
+        description={`Are you sure you want to delete ${user.firstName} ${user.lastName}? This action cannot be undone.`}
+        confirmText="Delete"
+        cancelText="Cancel"
+      />
+    </>
+  );
+}
 
   return (
     <>
