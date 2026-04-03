@@ -99,9 +99,9 @@ export default function BookmarksPage() {
       </Flex>
 
       {bookmarkedUsers.length === 0 ? (
-        <Text>No bookmarked users yet.</Text>
+        <Text color="gray.600" textAlign="center" py={10}>No bookmarked users yet.</Text>
       ) : filteredUsers.length === 0 ? (
-        <Text>No users match your search.</Text>
+        <Text color="gray.600" textAlign="center" py={10}>No users match your search.</Text>
       ) : (
         <>
           {viewMode === 'grid' ? (
