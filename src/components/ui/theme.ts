@@ -96,6 +96,10 @@ const config = defineConfig({
     },
     body: {
       colorPalette: 'brand',
+      color: 'gray.800',
+    },
+    label: {
+      color: 'gray.800',
     },
 
     /* tighten inputs/search bars */
@@ -103,6 +107,11 @@ const config = defineConfig({
       height: '34px',
       minHeight: '34px',
       color: 'black',
+    },
+
+    'input::placeholder, textarea::placeholder': {
+      color: 'gray.500',
+      opacity: 1,
     },
 
     '::selection': {

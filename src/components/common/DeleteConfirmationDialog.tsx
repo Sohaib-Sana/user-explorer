@@ -35,10 +35,10 @@ export default function DeleteConfirmationDialog({
         maxW="md"
         bg="white"
       >
-        <Dialog.Header>
+        <Dialog.Header pb={2}>
           <Dialog.Title color="black">{title}</Dialog.Title>
         </Dialog.Header>
-        <Dialog.Body>
+        <Dialog.Body color="gray.700" pt={0} pb={6}>
           <p>{description}</p>
         </Dialog.Body>
         <Dialog.Footer>
