@@ -106,7 +106,7 @@ export default function AppShell() {
             )}
 
             <Heading size="xs" color="black" lineHeight="1.1">
-              User Explorer
+              Andrea Assessment
             </Heading>
           </Flex>
 
