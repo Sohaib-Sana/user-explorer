@@ -24,17 +24,22 @@ export default function AppShell() {
 
   const [viewMode, setViewMode] = useState<ViewMode>('list');
 
-  const isUsersPage = location.pathname === '/users' || location.pathname === '/';
-  const isBookmarksPage =
-    location.pathname === '/bookmarks' || location.pathname === '/login';
+
+  const pathname = location.pathname;
+
+  const isUsersPage = pathname === '/users' || pathname === '/';
+  const isLoginPage = pathname === '/login';
+  const isSignupPage = pathname === '/signup';
+  const isAuthPage = isLoginPage || isSignupPage;
+  const isBookmarksPage = pathname === '/bookmarks' || isAuthPage;
 
   const showViewToggle =
     location.pathname === '/users' || location.pathname === '/bookmarks';
 
   return (
     <div className="app-container">
-      <Box minH="100vh" w="100%" bg="white">
-       <Flex
+      <Box minH="100vh" w="100%" bg="gray.50">
+        <Flex
           px={{ base: 4, md: 8 }}
           py={4}
           bg="white"
@@ -66,10 +71,11 @@ export default function AppShell() {
                     h="auto"
                     rounded="full"
                   >
-                    <Avatar.Root size="sm" background="#63c94e" color="white">
+                    <Avatar.Root size="md" bg="brand.600" color="white" boxSize="40px">
                       <Avatar.Fallback
-                        name={user?.email || 'User'}
-                        fontSize="lg"
+                        name={user?.email || "User"}
+                        // bg="brand."
+                        color="white"
                       />
                     </Avatar.Root>
                   </Button>
@@ -77,7 +83,7 @@ export default function AppShell() {
 
                 <Portal>
                   <Menu.Positioner>
-                    <Menu.Content minW="220px">
+                    <Menu.Content minW="180px" bg='white'>
                       <Box px={3} py={2}>
                         <Text fontSize="sm" color="gray.500">
                           Signed in as
@@ -92,6 +98,7 @@ export default function AppShell() {
                       <Menu.Item
                         value="logout"
                         color="red.500"
+                        _hover={{ bg: 'red.50', cursor: 'pointer' }}
                         onClick={() => {
                           dispatch(logout());
                           navigate('/login');
@@ -105,7 +112,7 @@ export default function AppShell() {
               </Menu.Root>
             )}
 
-            <Heading size="xs" color="black" lineHeight="1.1">
+            <Heading size="xs" color="black" lineHeight="1.1" cursor="pointer" onClick={() => navigate('/')}>
               Andrea Assessment
             </Heading>
           </Flex>
@@ -121,7 +128,7 @@ export default function AppShell() {
                 display={{ base: 'none', md: 'flex' }}
                 p="3px"
                 rounded="full"
-                bg="linear-gradient(90deg, #54b740 0%, #63c94e 100%)"
+                bg="brand.500"
                 w="240px"
               >
                 <Button
@@ -133,7 +140,7 @@ export default function AppShell() {
                   onClick={() => setViewMode('list')}
                   rounded="full"
                   bg={viewMode === 'list' ? 'white' : 'transparent'}
-                  color={viewMode === 'list' ? '#54b740' : 'white'}
+                  color={viewMode === 'list' ? 'brand.600' : 'white'}
                   fontWeight="semibold"
                   _hover={{ bg: viewMode === 'list' ? 'white' : 'transparent' }}
                   _active={{ bg: viewMode === 'list' ? 'white' : 'transparent' }}
@@ -150,7 +157,7 @@ export default function AppShell() {
                   onClick={() => setViewMode('grid')}
                   rounded="full"
                   bg={viewMode === 'grid' ? 'white' : 'transparent'}
-                  color={viewMode === 'grid' ? '#54b740' : 'white'}
+                  color={viewMode === 'grid' ? 'brand.600' : 'white'}
                   fontWeight="semibold"
                   _hover={{ bg: viewMode === 'grid' ? 'white' : 'transparent' }}
                   _active={{ bg: viewMode === 'grid' ? 'white' : 'transparent' }}
@@ -169,28 +176,38 @@ export default function AppShell() {
             justify={{ base: 'stretch', md: 'flex-end' }}
             w={{ base: '100%', md: 'auto' }}
           >
-           <Button
+            <Button
               asChild
-              variant={isUsersPage ? 'solid' : 'outline'}
-              size="xs"
-              h="35px"
+              variant="ghost"
+              size="sm"
               px={3}
+              py={1}
               fontSize="sm"
+              borderRadius="md"
               flex={{ base: 1, md: 'unset' }}
-              backgroundColor={isUsersPage ? '#63c94e' : 'transparent'}
+              bg="transparent"
+              color={isUsersPage ? 'brand.600' : 'gray.600'}
+              textDecoration={isUsersPage ? 'underline' : 'none'}
+              textUnderlineOffset="4px"
+              _hover={{ color: 'brand.700', bg: 'gray.50' }}
             >
               <Link to="/users">Users</Link>
             </Button>
 
             <Button
               asChild
-              variant={isBookmarksPage ? 'solid' : 'outline'}
-              size="xs"
-              h="35px"
+              variant="ghost"
+              size="sm"
               px={3}
+              py={1}
               fontSize="sm"
+              borderRadius="md"
               flex={{ base: 1, md: 'unset' }}
-              backgroundColor={isBookmarksPage ? '#63c94e' : 'transparent'}
+              bg="transparent"
+              color={isBookmarksPage ? 'brand.600' : 'gray.600'}
+              textDecoration={isBookmarksPage ? 'underline' : 'none'}
+              textUnderlineOffset="4px"
+              _hover={{ color: 'brand.700', bg: 'gray.50' }}
             >
               {isAuthenticated ? (
                 <Link to="/bookmarks">Bookmarks</Link>
@@ -198,22 +215,24 @@ export default function AppShell() {
                 <Link to="/login">Login</Link>
               )}
             </Button>
+
+
           </Flex>
         </Flex>
 
         <Box
           w="100%"
           minH="calc(100vh - 81px)"
-          bg="white"
+          bg="transparent"
           px={{ base: 4, md: 8 }}
           py={8}
         >
           <Box
             w="100%"
-            maxW="1400px"
+            maxW={isAuthPage ? '440px' : '1400px'}
             mx="auto"
             bg="white"
-            p={{ base: 4, md: 6 }}
+            p={{ base: 5, md: 6 }}
             border="1px solid"
             borderColor="gray.200"
             rounded="xl"
@@ -223,6 +242,6 @@ export default function AppShell() {
           </Box>
         </Box>
       </Box>
-    </div>
+    </div >
   );
 }

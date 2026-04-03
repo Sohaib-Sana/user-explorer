@@ -1,6 +1,7 @@
 import {
   Button,
-  Card,
+  Box,
+  Flex,
   Field,
   Heading,
   Input,
@@ -8,6 +9,7 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { useState } from 'react';
+import { LuArrowLeft } from 'react-icons/lu';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../app/hooks';
 import { loginSuccess } from '../features/auth/authSlice';
@@ -75,55 +77,64 @@ export default function LoginPage() {
   };
 
   return (
-    <Card.Root maxW="480px" mx="auto">
-      <Card.Body>
-        <Heading size="md" mb={6} color="black">
+    <Box maxW="320px" h="550px" mx="auto" w="100%" py={8}>
+      <Flex align="center" gap={3} mb={6}>
+        <Button variant="ghost" size="sm" onClick={() => navigate('/users')} px={2}>
+          <LuArrowLeft />
+        </Button>
+        <Heading size="md" color="black" mb={0}>
           Login
         </Heading>
+      </Flex>
 
-        <form onSubmit={handleSubmit} noValidate>
-          <VStack gap={4} align="stretch">
-            <Field.Root required invalid={touched.email && !!emailError}>
-              <Field.Label>Email</Field.Label>
-              <Input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                onBlur={() =>
-                  setTouched((prev) => ({ ...prev, email: true }))
-                }
-                placeholder="you@example.com"
-              />
-              <Field.ErrorText>{emailError}</Field.ErrorText>
-            </Field.Root>
+      <form onSubmit={handleSubmit} noValidate>
+        <VStack gap={4} align="stretch">
+          <Field.Root required invalid={touched.email && !!emailError}>
+            <Field.Label>Email</Field.Label>
+            <Input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              onBlur={() =>
+                setTouched((prev) => ({ ...prev, email: true }))
+              }
+              placeholder="you@example.com"
+            />
+            <Field.ErrorText>{emailError}</Field.ErrorText>
+          </Field.Root>
 
-            <Field.Root required invalid={touched.password && !!passwordError}>
-              <Field.Label>Password</Field.Label>
-              <Input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                onBlur={() =>
-                  setTouched((prev) => ({ ...prev, password: true }))
-                }
-                placeholder="••••••••"
-              />
-              <Field.ErrorText>{passwordError}</Field.ErrorText>
-            </Field.Root>
+          <Field.Root required invalid={touched.password && !!passwordError}>
+            <Field.Label>Password</Field.Label>
+            <Input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              onBlur={() =>
+                setTouched((prev) => ({ ...prev, password: true }))
+              }
+              placeholder="••••••••"
+            />
+            <Field.ErrorText>{passwordError}</Field.ErrorText>
+          </Field.Root>
 
-            <Button type="submit" backgroundColor="#63c94e" color="white">
-              Login
-            </Button>
+          <Button type="submit" backgroundColor="brand.600" color="white" mt={2}>
+            Login
+          </Button>
 
-            <Text fontSize="sm" textAlign="center" color="gray.600">
-              Don&apos;t have an account?{' '}
-              <Text as="span" color="#63c94e" fontWeight="medium">
-                <Link to="/signup">Signup now</Link>
-              </Text>
+          <Box mt={2} p={4} bg="gray.100" rounded="md" fontSize="sm" color="gray.700" textAlign="left">
+            <Text fontWeight="medium" mb={1} color="black">Dummy Credentials:</Text>
+            <Text>Email: test@dummy.com</Text>
+            <Text>Password: dummy@123</Text>
+          </Box>
+
+          <Text fontSize="sm" textAlign="center" color="gray.600" mt={4}>
+            Don&apos;t have an account?{' '}
+            <Text as="span" color="brand.600" fontWeight="medium">
+              <Link to="/signup">Signup now</Link>
             </Text>
-          </VStack>
-        </form>
-      </Card.Body>
-    </Card.Root>
+          </Text>
+        </VStack>
+      </form>
+    </Box>
   );
 }

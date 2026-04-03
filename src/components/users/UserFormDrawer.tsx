@@ -100,54 +100,54 @@ export default function UserFormDrawer({ isOpen, onClose }: Props) {
             <Dialog.Title color="black">{isEditing ? 'Update User' : 'Add User'}</Dialog.Title>
           </Dialog.Header>
           <Dialog.Body>
-                <VStack gap={4} align="stretch">
-                  <Field.Root required>
-                    <Field.Label>First Name</Field.Label>
-                    <Input
-                      value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)}
-                    />
-                  </Field.Root>
+            <VStack gap={4} align="stretch">
+              <Field.Root required>
+                <Field.Label>First Name</Field.Label>
+                <Input
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                />
+              </Field.Root>
 
-                  <Field.Root required>
-                    <Field.Label>Last Name</Field.Label>
-                    <Input
-                      value={lastName}
-                      onChange={(e) => setLastName(e.target.value)}
-                    />
-                  </Field.Root>
+              <Field.Root required>
+                <Field.Label>Last Name</Field.Label>
+                <Input
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                />
+              </Field.Root>
 
-                  <Field.Root required>
-                    <Field.Label>Email</Field.Label>
-                    <Input
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                    />
-                  </Field.Root>
+              <Field.Root required>
+                <Field.Label>Email</Field.Label>
+                <Input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </Field.Root>
 
-                  <Field.Root>
-                    <Field.Label>Phone</Field.Label>
-                    <Input
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                    />
-                  </Field.Root>
-                </VStack>
-              </Dialog.Body>
-              <Dialog.Footer>
-                <Button mr={2} variant="outline" onClick={onClose} h="35px">
-                  Cancel
-                </Button>
-                <Button type="submit" backgroundColor="#63c94e" loading={loading} h="35px">
-                  {isEditing ? 'Update' : 'Add'}
-                </Button>
-              </Dialog.Footer>
-            </form>
-            <Dialog.CloseTrigger asChild>
-              <CloseButton size="sm" position="absolute" top={3} right={3} />
-            </Dialog.CloseTrigger>
-          </Dialog.Content>
-        </Dialog.Root>
+              <Field.Root>
+                <Field.Label>Phone</Field.Label>
+                <Input
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                />
+              </Field.Root>
+            </VStack>
+          </Dialog.Body>
+          <Dialog.Footer>
+            <Button mr={2} variant="outline" onClick={onClose} h="35px">
+              Cancel
+            </Button>
+            <Button type="submit" backgroundColor="brand.500" loading={loading} h="35px">
+              {isEditing ? 'Update' : 'Add'}
+            </Button>
+          </Dialog.Footer>
+        </form>
+        <Dialog.CloseTrigger asChild>
+          <CloseButton size="sm" position="absolute" top={3} right={3} />
+        </Dialog.CloseTrigger>
+      </Dialog.Content>
+    </Dialog.Root>
   );
 }

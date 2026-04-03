@@ -13,25 +13,25 @@ const buttonRecipe = defineRecipe({
   variants: {
     variant: {
       solid: {
-        bg: '#9C80FE',
+        bg: '{colors.brand.500}',
         color: 'white',
         _hover: {
-          bg: '#8b6ff2',
+          bg: '{colors.brand.600}',
         },
       },
       outline: {
         borderWidth: '1px',
-        borderColor: '#c8b3ff',
-        color: '#7759da',
+        borderColor: '{colors.brand.300}',
+        color: '{colors.brand.700}',
         bg: 'white',
         _hover: {
-          bg: '#f7f3ff',
+          bg: '{colors.brand.50}',
         },
       },
       ghost: {
-        color: '#7759da',
+        color: '{colors.brand.700}',
         _hover: {
-          bg: '#f7f3ff',
+          bg: '{colors.brand.50}',
         },
       },
     },
@@ -67,23 +67,23 @@ const config = defineConfig({
     tokens: {
       colors: {
         brand: {
-          50: { value: '#f7f3ff' },
-          100: { value: '#ede5ff' },
-          200: { value: '#ddd0ff' },
-          300: { value: '#c8b3ff' },
-          400: { value: '#b294ff' },
-          500: { value: '#9C80FE' },
-          600: { value: '#8b6ff2' },
-          700: { value: '#7759da' },
-          800: { value: '#6247ba' },
-          900: { value: '#503a97' },
+          50: { value: '#ecfeff' },
+          100: { value: '#cffafe' },
+          200: { value: '#a5f3fc' },
+          300: { value: '#67e8f9' },
+          400: { value: '#22d3ee' },
+          500: { value: '#06b6d4' },
+          600: { value: '#0891b2' },
+          700: { value: '#0e7490' },
+          800: { value: '#155e75' },
+          900: { value: '#164e63' },
         },
       },
     },
     semanticTokens: {
       colors: {
-        primary: { value: '#9C80FE' },
-        primaryHover: { value: '#8b6ff2' },
+        primary: { value: '#06b6d4' },
+        primaryHover: { value: '#0e7490' },
       },
     },
     recipes: {
@@ -92,16 +92,22 @@ const config = defineConfig({
   },
   globalCss: {
     html: {
-      colorPalette: 'purple',
+      colorPalette: 'brand',
     },
     body: {
-      colorPalette: 'purple',
+      colorPalette: 'brand',
     },
 
     /* tighten inputs/search bars */
     'input, textarea, select': {
       height: '34px',
       minHeight: '34px',
+      color: 'black',
+    },
+
+    'input::selection, textarea::selection': {
+      backgroundColor: 'brand.500',
+      color: 'white',
     },
 
     '[data-part="start-element"], [data-part="end-element"]': {

@@ -1,6 +1,7 @@
 import {
   Button,
-  Card,
+  Box,
+  Flex,
   Field,
   Heading,
   Input,
@@ -8,6 +9,7 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { useState } from 'react';
+import { LuArrowLeft } from 'react-icons/lu';
 import { Link, useNavigate } from 'react-router-dom';
 import { toaster } from '../components/ui/toaster';
 import type { RegisteredUser } from '../features/auth/authTypes';
@@ -95,70 +97,73 @@ export default function SignupPage() {
   };
 
   return (
-    <Card.Root maxW="480px" mx="auto">
-      <Card.Body>
-        <Heading size="md" mb={6} color="black">
+    <Box maxW="320px" h="550px" mx="auto" w="100%" py={8}>
+      <Flex align="center" gap={3} mb={6}>
+        <Button variant="ghost" size="sm" onClick={() => navigate('/users')} px={2}>
+          <LuArrowLeft />
+        </Button>
+        <Heading size="md" color="black" mb={0}>
           Signup
         </Heading>
+      </Flex>
 
-        <form onSubmit={handleSubmit} noValidate>
-          <VStack gap={4} align="stretch">
-            <Field.Root required invalid={touched.email && !!emailError}>
-              <Field.Label>Email</Field.Label>
-              <Input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                onBlur={() => setTouched((prev) => ({ ...prev, email: true }))}
-                placeholder="you@example.com"
-              />
-              <Field.ErrorText>{emailError}</Field.ErrorText>
-            </Field.Root>
+      <form onSubmit={handleSubmit} noValidate>
+        <VStack gap={4} align="stretch">
+          <Field.Root required invalid={touched.email && !!emailError}>
+            <Field.Label>Email</Field.Label>
+            <Input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              onBlur={() => setTouched((prev) => ({ ...prev, email: true }))}
+              placeholder="you@example.com"
+            />
+            <Field.ErrorText>{emailError}</Field.ErrorText>
+          </Field.Root>
 
-            <Field.Root required invalid={touched.password && !!passwordError}>
-              <Field.Label>Password</Field.Label>
-              <Input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                onBlur={() =>
-                  setTouched((prev) => ({ ...prev, password: true }))
-                }
-                placeholder="••••••••"
-              />
-              <Field.ErrorText>{passwordError}</Field.ErrorText>
-            </Field.Root>
+          <Field.Root required invalid={touched.password && !!passwordError}>
+            <Field.Label>Password</Field.Label>
+            <Input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              onBlur={() =>
+                setTouched((prev) => ({ ...prev, password: true }))
+              }
+              placeholder="••••••••"
+            />
+            <Field.ErrorText>{passwordError}</Field.ErrorText>
+          </Field.Root>
 
-            <Field.Root
-              required
-              invalid={touched.confirmPassword && !!confirmPasswordError}
-            >
-              <Field.Label>Confirm Password</Field.Label>
-              <Input
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                onBlur={() =>
-                  setTouched((prev) => ({ ...prev, confirmPassword: true }))
-                }
-                placeholder="••••••••"
-              />
-              <Field.ErrorText>{confirmPasswordError}</Field.ErrorText>
-            </Field.Root>
+          <Field.Root
+            required
+            invalid={touched.confirmPassword && !!confirmPasswordError}
+          >
+            <Field.Label>Confirm Password</Field.Label>
+            <Input
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              onBlur={() =>
+                setTouched((prev) => ({ ...prev, confirmPassword: true }))
+              }
+              placeholder="••••••••"
+            />
+            <Field.ErrorText>{confirmPasswordError}</Field.ErrorText>
+          </Field.Root>
 
-            <Button type="submit" backgroundColor="#63c94e" color="white">
-              Signup
-            </Button>
+          <Button type="submit" backgroundColor="brand.600" color="white" mt={2}>
+            Signup
+          </Button>
 
-            <Text fontSize="sm" textAlign="center" color="gray.600">
-              Already have an account?{' '}
-              <Text as="span" color="#63c94e" fontWeight="medium">
-                <Link to="/login">Login</Link>
-              </Text>
+          <Text fontSize="sm" textAlign="center" color="gray.600" mt={4}>
+            Already have an account?{' '}
+            <Text as="span" color="brand.600" fontWeight="medium">
+              <Link to="/login">Login</Link>
             </Text>
-          </VStack>
-        </form>
-      </Card.Body>
-    </Card.Root>
+          </Text>
+        </VStack>
+      </form>
+    </Box>
   );
 }

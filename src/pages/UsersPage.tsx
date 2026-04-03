@@ -80,7 +80,7 @@ export default function UsersPage() {
         <Heading size="lg" color="black">
           Users
         </Heading>
-        <Button colorPalette="brand" onClick={handleAdd} backgroundColor={'#63c94e'}  h="35px">
+        <Button colorPalette="brand" onClick={handleAdd} backgroundColor={'brand.600'} h="35px">
           + Add User
         </Button>
       </Flex>
@@ -143,16 +143,16 @@ export default function UsersPage() {
                 overflowX="auto"
                 minH="420px"
               >
-                <Table.Root variant="line">
-                  <Table.Header>
-                    <Table.Row>
-                      <Table.ColumnHeader>Name</Table.ColumnHeader>
-                      <Table.ColumnHeader>Email</Table.ColumnHeader>
-                      <Table.ColumnHeader>Phone</Table.ColumnHeader>
-                      <Table.ColumnHeader>Actions</Table.ColumnHeader>
+                <Table.Root variant="line" bg="white" color="black">
+                  <Table.Header bg="white">
+                    <Table.Row bg="white">
+                      <Table.ColumnHeader color="black" fontWeight="bold">Name</Table.ColumnHeader>
+                      <Table.ColumnHeader color="black" fontWeight="bold">Email</Table.ColumnHeader>
+                      <Table.ColumnHeader color="black" fontWeight="bold">Phone</Table.ColumnHeader>
+                      <Table.ColumnHeader color="black" fontWeight="bold">Actions</Table.ColumnHeader>
                     </Table.Row>
                   </Table.Header>
-                  <Table.Body>
+                  <Table.Body bg="white">
                     {items.map((user) => (
                       <UserCard
                         key={user.id}

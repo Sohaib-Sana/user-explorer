@@ -11,6 +11,7 @@ interface DeleteConfirmationDialogProps {
   description: string;
   confirmText?: string;
   cancelText?: string;
+  confirmColorPalette?: string;
 }
 
 export default function DeleteConfirmationDialog({
@@ -21,6 +22,7 @@ export default function DeleteConfirmationDialog({
   description,
   confirmText = 'Delete',
   cancelText = 'Cancel',
+  confirmColorPalette = 'red',
 }: DeleteConfirmationDialogProps) {
   return (
     <Dialog.Root open={isOpen} onOpenChange={(details) => !details.open && onClose()}>
@@ -31,6 +33,7 @@ export default function DeleteConfirmationDialog({
         left="50%"
         transform="translate(-50%, -50%)"
         maxW="md"
+        bg="white"
       >
         <Dialog.Header>
           <Dialog.Title color="black">{title}</Dialog.Title>
@@ -44,7 +47,7 @@ export default function DeleteConfirmationDialog({
               {cancelText}
             </IconButton>
           </Dialog.ActionTrigger>
-          <IconButton colorPalette="red" onClick={onConfirm} px={4} py={2}>
+          <IconButton colorPalette={confirmColorPalette} onClick={onConfirm} px={4} py={2}>
             {confirmText}
           </IconButton>
         </Dialog.Footer>
