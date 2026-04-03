@@ -105,7 +105,7 @@ const config = defineConfig({
       color: 'black',
     },
 
-    'input::selection, textarea::selection': {
+    '::selection': {
       backgroundColor: 'brand.500',
       color: 'white',
     },

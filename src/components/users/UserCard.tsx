@@ -106,7 +106,7 @@ export default function UserCard({ user, onEdit, layout = 'table' }: Props) {
             mb={3}
             gap={3}
           >
-            <Flex align="center" gap={3} flex={1} minW={0}>
+            <Flex align="flex-start" gap={3} flex={1} minW={0}>
               <Box position="relative" boxSize="32px" rounded="full" overflow="hidden" bg="brand.500" color="white" flexShrink={0}>
                 {user.image ? (
                   <img src={user.image} alt={user.firstName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />

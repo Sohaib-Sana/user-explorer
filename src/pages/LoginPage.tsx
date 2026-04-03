@@ -55,24 +55,32 @@ export default function LoginPage() {
 
     if (!isFormValid) return;
 
-    const storedUsers = localStorage.getItem('registeredUsers');
-    const users: RegisteredUser[] = storedUsers ? JSON.parse(storedUsers) : [];
+    let loginEmail = '';
 
-    const matchedUser = users.find(
-      (user) => user.email === normalizedEmail && user.password === password
-    );
+    if (normalizedEmail === 'test@dummy.com' && password === 'dummy@123') {
+      loginEmail = 'test@dummy.com';
+    } else {
+      const storedUsers = localStorage.getItem('registeredUsers');
+      const users: RegisteredUser[] = storedUsers ? JSON.parse(storedUsers) : [];
 
-    if (!matchedUser) {
-      toaster.create({
-        title: 'Login failed',
-        description: 'Invalid email or password.',
-        type: 'error',
-        meta: { closable: true },
-      });
-      return;
+      const matchedUser = users.find(
+        (user) => user.email === normalizedEmail && user.password === password
+      );
+
+      if (!matchedUser) {
+        toaster.create({
+          title: 'Login failed',
+          description: 'Invalid email or password.',
+          type: 'error',
+          meta: { closable: true },
+        });
+        return;
+      }
+      
+      loginEmail = matchedUser.email;
     }
 
-    dispatch(loginSuccess({ email: matchedUser.email }));
+    dispatch(loginSuccess({ email: loginEmail }));
     navigate('/bookmarks');
   };
 

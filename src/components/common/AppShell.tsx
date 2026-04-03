@@ -2,7 +2,6 @@ import {
   Avatar,
   Box,
   Button,
-
   Flex,
   Heading,
   Menu,
@@ -37,10 +36,10 @@ export default function AppShell() {
     location.pathname === '/users' || location.pathname === '/bookmarks';
 
   return (
-    <div className="app-container">
+    <>
       <Box minH="100vh" w="100%" bg="gray.50">
         <Flex
-          px={{ base: 4, md: 8 }}
+          px={{ base: 6, md: 8, lg: 16, xl: 28 }}
           py={4}
           bg="white"
           borderBottom="1px solid"
@@ -112,7 +111,7 @@ export default function AppShell() {
               </Menu.Root>
             )}
 
-            <Heading size="xs" color="black" lineHeight="1.1" cursor="pointer" onClick={() => navigate('/')}>
+            <Heading size="md" color="black" lineHeight="1.1" cursor="pointer" onClick={() => navigate('/')}>
               Andrea Assessment
             </Heading>
           </Flex>
@@ -224,7 +223,7 @@ export default function AppShell() {
           w="100%"
           minH="calc(100vh - 81px)"
           bg="transparent"
-          px={{ base: 4, md: 8 }}
+          px={{ base: 6, md: 8, lg: 16, xl: 28 }}
           py={8}
         >
           <Box
@@ -242,6 +241,6 @@ export default function AppShell() {
           </Box>
         </Box>
       </Box>
-    </div >
+    </>
   );
 }
