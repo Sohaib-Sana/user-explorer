@@ -8,8 +8,9 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
-import { useState } from 'react';
 import { LuArrowLeft } from 'react-icons/lu';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 import { Link, useNavigate } from 'react-router-dom';
 import { toaster } from '../components/ui/toaster';
 import type { RegisteredUser } from '../features/auth/authTypes';
@@ -17,84 +18,65 @@ import type { RegisteredUser } from '../features/auth/authTypes';
 export default function SignupPage() {
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-
-  const [touched, setTouched] = useState({
-    email: false,
-    password: false,
-    confirmPassword: false,
+  const validationSchema = Yup.object().shape({
+    email: Yup.string()
+      .email('Enter a valid email address')
+      .matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, 'Must be a valid email containing a domain')
+      .required('Email is required'),
+    password: Yup.string()
+      .min(6, 'Password must be at least 6 characters')
+      .required('Password is required'),
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref('password')], 'Passwords do not match')
+      .required('Confirm password is required'),
   });
 
-  const normalizedEmail = email.trim().toLowerCase();
+  const formik = useFormik({
+    initialValues: {
+      email: '',
+      password: '',
+      confirmPassword: '',
+    },
+    validationSchema,
+    onSubmit: (values, { setSubmitting }) => {
+      const normalizedEmail = values.email.trim().toLowerCase();
+      const storedUsers = localStorage.getItem('registeredUsers');
+      const users: RegisteredUser[] = storedUsers ? JSON.parse(storedUsers) : [];
 
-  const emailError = (() => {
-    if (!normalizedEmail) return 'Email is required';
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(normalizedEmail)) return 'Enter a valid email address';
-    return '';
-  })();
+      const alreadyExists = users.some((user) => user.email === normalizedEmail);
 
-  const passwordError = (() => {
-    if (!password) return 'Password is required';
-    if (password.length < 6) return 'Password must be at least 6 characters';
-    return '';
-  })();
+      if (alreadyExists) {
+        toaster.create({
+          title: 'Account already exists',
+          description: 'An account with this email already exists.',
+          type: 'error',
+          meta: { closable: true },
+        });
+        setSubmitting(false);
+        return;
+      }
 
-  const confirmPasswordError = (() => {
-    if (!confirmPassword) return 'Confirm password is required';
-    if (confirmPassword !== password) return 'Passwords do not match';
-    return '';
-  })();
+      const newUser: RegisteredUser = {
+        email: normalizedEmail,
+        password: values.password,
+      };
 
-  const isFormValid = !emailError && !passwordError && !confirmPasswordError;
+      localStorage.setItem(
+        'registeredUsers',
+        JSON.stringify([...users, newUser])
+      );
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    setTouched({
-      email: true,
-      password: true,
-      confirmPassword: true,
-    });
-
-    if (!isFormValid) return;
-
-    const storedUsers = localStorage.getItem('registeredUsers');
-    const users: RegisteredUser[] = storedUsers ? JSON.parse(storedUsers) : [];
-
-    const alreadyExists = users.some((user) => user.email === normalizedEmail);
-
-    if (alreadyExists) {
       toaster.create({
-        title: 'Account already exists',
-        description: 'An account with this email already exists.',
-        type: 'error',
+        title: 'Signup successful',
+        description: 'Your account has been created. Please log in.',
+        type: 'success',
         meta: { closable: true },
       });
-      return;
-    }
 
-    const newUser: RegisteredUser = {
-      email: normalizedEmail,
-      password,
-    };
-
-    localStorage.setItem(
-      'registeredUsers',
-      JSON.stringify([...users, newUser])
-    );
-
-    toaster.create({
-      title: 'Signup successful',
-      description: 'Your account has been created. Please log in.',
-      type: 'success',
-      meta: { closable: true },
-    });
-
-    navigate('/login');
-  };
+      setSubmitting(false);
+      navigate('/login');
+    },
+  });
 
   return (
     <Box maxW="320px" h="550px" mx="auto" w="100%" py={8}>
@@ -107,52 +89,42 @@ export default function SignupPage() {
         </Heading>
       </Flex>
 
-      <form onSubmit={handleSubmit} noValidate>
+      <form onSubmit={formik.handleSubmit} noValidate>
         <VStack gap={4} align="stretch">
-          <Field.Root required invalid={touched.email && !!emailError}>
+          <Field.Root required invalid={formik.touched.email && !!formik.errors.email}>
             <Field.Label>Email</Field.Label>
             <Input
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              onBlur={() => setTouched((prev) => ({ ...prev, email: true }))}
               placeholder="you@example.com"
+              {...formik.getFieldProps('email')}
             />
-            <Field.ErrorText>{emailError}</Field.ErrorText>
+            <Field.ErrorText>{formik.errors.email as string}</Field.ErrorText>
           </Field.Root>
 
-          <Field.Root required invalid={touched.password && !!passwordError}>
+          <Field.Root required invalid={formik.touched.password && !!formik.errors.password}>
             <Field.Label>Password</Field.Label>
             <Input
               type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              onBlur={() =>
-                setTouched((prev) => ({ ...prev, password: true }))
-              }
               placeholder="••••••••"
+              {...formik.getFieldProps('password')}
             />
-            <Field.ErrorText>{passwordError}</Field.ErrorText>
+            <Field.ErrorText>{formik.errors.password as string}</Field.ErrorText>
           </Field.Root>
 
           <Field.Root
             required
-            invalid={touched.confirmPassword && !!confirmPasswordError}
+            invalid={formik.touched.confirmPassword && !!formik.errors.confirmPassword}
           >
             <Field.Label>Confirm Password</Field.Label>
             <Input
               type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              onBlur={() =>
-                setTouched((prev) => ({ ...prev, confirmPassword: true }))
-              }
               placeholder="••••••••"
+              {...formik.getFieldProps('confirmPassword')}
             />
-            <Field.ErrorText>{confirmPasswordError}</Field.ErrorText>
+            <Field.ErrorText>{formik.errors.confirmPassword as string}</Field.ErrorText>
           </Field.Root>
 
-          <Button type="submit" backgroundColor="brand.600" color="white" mt={2}>
+          <Button type="submit" backgroundColor="brand.600" color="white" mt={2} loading={formik.isSubmitting}>
             Signup
           </Button>
 

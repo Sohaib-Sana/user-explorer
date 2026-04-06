@@ -18,7 +18,7 @@ import { fetchUsers, searchUsers } from '../features/users/usersThunks';
 import { setSelectedUser } from '../features/users/usersSlice';
 import Pagination from '../components/common/Pagination';
 import UserCard from '../components/users/UserCard';
-import UserFormDrawer from '../components/users/UserFormDrawer';
+import UserFormDialog from '../components/users/UserFormDialog';
 import SearchField from '../components/common/SearchField';
 import type { ViewMode } from '../components/common/AppShell';
 
@@ -191,7 +191,7 @@ export default function UsersPage() {
         </Box>
       )}
 
-      <UserFormDrawer isOpen={open} onClose={handleDrawerClose} />
+      <UserFormDialog isOpen={open} onClose={handleDrawerClose} />
     </Box>
   );
 }

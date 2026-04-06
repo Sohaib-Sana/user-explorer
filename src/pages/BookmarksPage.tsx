@@ -13,7 +13,7 @@ import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { setSelectedUser } from '../features/users/usersSlice';
 import { fetchUsersByIds } from '../features/users/usersThunks';
 import UserCard from '../components/users/UserCard';
-import UserFormDrawer from '../components/users/UserFormDrawer';
+import UserFormDialog from '../components/users/UserFormDialog';
 import SearchField from '../components/common/SearchField';
 import Pagination from '../components/common/Pagination';
 import type { ViewMode } from '../components/common/AppShell';
@@ -156,7 +156,7 @@ export default function BookmarksPage() {
         </>
       )}
 
-      <UserFormDrawer isOpen={open} onClose={handleDrawerClose} />
+      <UserFormDialog isOpen={open} onClose={handleDrawerClose} />
     </Box>
   );
 }
